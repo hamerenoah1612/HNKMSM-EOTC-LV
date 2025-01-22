@@ -21,16 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #Your DEBUG setting should correctly evaluate to False in production:
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ['DB_SECRET_KEY']
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['HNKMSMEOTCAPP.up.railway.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['hnkmsm-eotc-lv-production.up.railway.app', '127.0.0.1', 'localhost']
 
 #CROSS_ALLOWED_ORIGEN
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  
     "http://127.0.0.1:8000",
-    "https://HNKMSMEOTCAPP.up.railway.app",
+    "https://hnkmsm-eotc-lv-production.up.railway.app/",
 ]
 
 #Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
@@ -130,16 +130,24 @@ WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 # }
 
 
-
 #DATABASES = { 'default' : dj_database_url.config()}
-DATABASES = { 
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=False
-        )
+# DATABASES = { 
+#     'default': dj_database_url.config(
+#         default=os.environ.get('DATABASE_URL'),
+#         conn_max_age=600,
+#         ssl_require=False
+#         )
+#     }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': 'autorack.proxy.rlwy.net',
+        'PORT': 56986,
     }
-
+}
 
 AUTHENTICATION_BACKENDS = (
 # Needed to login by username in Django admin, even w/o `allauth`
@@ -197,12 +205,12 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 
 # EMAIL
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SENDGRID_API_KEY = os.environ['DB_SENDGRID_API_KEY']
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD =  os.environ['DB_EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
 
 # Internationalization
@@ -240,10 +248,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
-STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
-STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
-STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET')
+STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
+STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
+STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
+STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
 
 #Error Logging: You could add logging handlers to capture errors in production:
 LOGGING = {
@@ -268,5 +276,5 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # BOTTOM OF settings.py
 
-if os.environ.get('ENVIRONMENT') != 'production':
-    from .local_settings import *
+# if os.environ.get('ENVIRONMENT') != 'production':
+#     from .local_settings import *
