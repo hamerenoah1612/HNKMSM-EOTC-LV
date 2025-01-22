@@ -24,13 +24,20 @@ DEBUG = True
 SECRET_KEY = os.environ['DB_SECRET_KEY']
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['hnkmsm-eotc-lv-production.up.railway.app', '127.0.0.1', 'localhost']
-
+ALLOWED_HOSTS = [
+    'hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
+    'localhost',
+    '127.0.0.1', 
+]
+#CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = [
+    'https://hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
+]
 #CROSS_ALLOWED_ORIGEN
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  
-    "http://127.0.0.1:8000",
-    "https://hnkmsm-eotc-lv-production.up.railway.app/",
+    'http://localhost:8000',  
+    'http://127.0.0.1:8000',
+    'https://hnkmsm-eotc-lv-production.up.railway.app',
 ]
 
 #Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
