@@ -87,7 +87,6 @@ class AddToPaymentCaseCartView(LoginRequiredMixin, View):
                 return redirect('Error creating or retrieving cart')  # Replace with an appropriate error page
 
         else:
-            messages.warning(request, "You need to create a membership first.")
             return redirect('members:member_create') 
         # Check if the item already exists in the cart
         cart_item, created = CartPaymentCases.objects.get_or_create(
