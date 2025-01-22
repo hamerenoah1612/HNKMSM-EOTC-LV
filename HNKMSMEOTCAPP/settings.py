@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 
 #Your DEBUG setting should correctly evaluate to False in production:
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
 SECRET_KEY = os.environ['DB_SECRET_KEY']
 
