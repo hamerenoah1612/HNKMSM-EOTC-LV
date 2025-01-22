@@ -121,7 +121,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 
 # Database
-
+DATABASE_URL= os.environ['DB_DATABASE_URL']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
