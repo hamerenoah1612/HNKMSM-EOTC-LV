@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #Your DEBUG setting should correctly evaluate to False in production:
 DEBUG = True
 
-SECRET_KEY = os.environ['DB_SECRET_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
@@ -133,7 +133,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': os.environ['DB_PASSWORD'],
+        'PASSWORD': os.environ['PASSWORD'],
         'HOST': 'autorack.proxy.rlwy.net',
         'PORT': 56986,
     }
@@ -195,12 +195,12 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 
 # EMAIL
-SENDGRID_API_KEY = os.environ['DB_SENDGRID_API_KEY']
+SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD =  os.environ['DB_EMAIL_HOST_PASSWORD']
+EMAIL_HOST_PASSWORD =  os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
 
 # Internationalization
@@ -238,10 +238,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
-STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
-STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
-STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
+STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
+STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
+STRIPE_WEBHOOK_SECRET = os.environ['STRIPE_WEBHOOK_SECRET']
+STRIPE_ENDPOINT_SECRET = os.environ['STRIPE_ENDPOINT_SECRET']
 
 #Error Logging: You could add logging handlers to capture errors in production:
 LOGGING = {
@@ -266,5 +266,5 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # BOTTOM OF settings.py
 
-# if os.environ.get('ENVIRONMENT') != 'production':
-#     from .local_settings import *
+if os.environ.get('ENVIRONMENT') != 'production':
+     from .local_settings import *
