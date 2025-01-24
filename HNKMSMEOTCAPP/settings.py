@@ -266,5 +266,5 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # BOTTOM OF settings.py
 
-if os.environ.get('ENVIRONMENT') != 'production':
-     from .local_settings import *
+#if os.environ.get('ENVIRONMENT') != 'production':
+#  from .local_settings import *
