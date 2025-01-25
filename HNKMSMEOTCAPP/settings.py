@@ -217,13 +217,13 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
 
 # Email configuration
-SENDGRID_API_KEY = config('DB_SENDGRID_API_KEY') 
+SENDGRID_API_KEY = config('SENDGRID_API_KEY') 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net' ) # default='smtp.gmail.com
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
-EMAIL_HOST_PASSWORD = config('DB_EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -275,10 +275,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
 # STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET','DB_STRIPE_ENDPOINT_SECRET')
 
 # Stripe configuration
-STRIPE_SECRET_KEY = config('DB_STRIPE_SECRET_KEY')
-STRIPE_PUBLISHABLE_KEY = config('DB_STRIPE_PUBLISHABLE_KEY')
-STRIPE_ENDPOINT_SECRET = config('DB_STRIPE_ENDPOINT_SECRET')
-STRIPE_WEBHOOK_SECRET = config('DB_STRIPE_WEBHOOK_SECRET')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_ENDPOINT_SECRET = config('STRIPE_ENDPOINT_SECRET')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
 
 
 #Error Logging: You could add logging handlers to capture errors in production:
