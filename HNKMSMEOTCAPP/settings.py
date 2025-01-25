@@ -12,26 +12,45 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url  
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 
-#Your DEBUG setting should correctly evaluate to False in production:
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# DEBUG mode: Use False in production, True in development
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-SECRET_KEY = os.environ['DB_SECRET_KEY']
+
+
+# SendGrid API Key
+SENDGRID_API_KEY = config('DB_SENDGRID_API_KEY')
+
+
+#Your DEBUG setting should correctly evaluate to False in production:
+#DEBUG = True #os.environ.get('DEBUG', 'False') == 'True'
+
+# SECRET_KEY = os.environ['DB_SECRET_KEY']
+#SECRET_KEY = os.environ.get('SECRET_KEY','DB_SECRET_KEY')
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-ALLOWED_HOSTS = ['hnkmsm-eotc-lv-production.up.railway.app', '127.0.0.1', 'localhost']
-
-#CROSS_ALLOWED_ORIGEN
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  
-    "http://127.0.0.1:8000",
-    "https://hnkmsm-eotc-lv-production.up.railway.app/",
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'hnkmsm-eotc-lv-production.up.railway.app',
 ]
+#CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = [
+    'https://hnkmsm-eotc-lv-production.up.railway.app',
+]
+#CORS_ALLOWED_ORIGINS
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://hnkmsm-eotc-lv-production.up.railway.app',
+]
+
 
 #Set this to True to avoid transmitting the CSRF cookie over HTTP accidentally.
 CSRF_COOKIE_SECURE = True
@@ -121,13 +140,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 
 # Database
-
+# Database configuration
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # Change this if using another database
+#         'NAME': config('DB_NAME', default='railway'),
+#         'USER': config('DB_USER', default='postgres'),
+#         'PASSWORD': config('PASSWORD'),
+#         'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
+#         'PORT': config('DB_PORT', default=56986),
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': os.environ['DB_PASSWORD'],
+        'PASSWORD': config('PASSWORD'),
         'HOST': 'autorack.proxy.rlwy.net',
         'PORT': 56986,
     }
@@ -189,14 +218,22 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 
 # EMAIL
-SENDGRID_API_KEY = os.environ['DB_SENDGRID_API_KEY']
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD =  os.environ['DB_EMAIL_HOST_PASSWORD']
-DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
+# SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY','L_DB_SENDGRID_API_KEY')
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD','DB_EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
 
+# Email configuration
+SENDGRID_API_KEY = config('DB_SENDGRID_API_KEY') 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net' ) # default='smtp.gmail.com
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
+EMAIL_HOST_PASSWORD = config('DB_EMAIL_HOST_PASSWORD')
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -233,10 +270,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
-STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
-STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
-STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
+# STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
+# STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
+# STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
+# STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
+
+# STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'DB_STRIPE_SECRET_KEY')
+# STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'DB_STRIPE_PUBLISHABLE_KEY')
+# STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET' , 'DB_STRIPE_WEBHOOK_SECRET')
+# STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET','DB_STRIPE_ENDPOINT_SECRET')
+
+# Stripe configuration
+STRIPE_SECRET_KEY = config('DB_STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = config('DB_STRIPE_PUBLISHABLE_KEY')
+STRIPE_ENDPOINT_SECRET = config('DB_STRIPE_ENDPOINT_SECRET')
+STRIPE_WEBHOOK_SECRET = config('DB_STRIPE_WEBHOOK_SECRET')
 
 #Error Logging: You could add logging handlers to capture errors in production:
 LOGGING = {
@@ -261,5 +309,5 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # BOTTOM OF settings.py
 
-# if os.environ.get('ENVIRONMENT') != 'production':
-#     from .local_settings import *
+if os.environ.get('ENVIRONMENT') != 'production':
+    from .local_settings import *

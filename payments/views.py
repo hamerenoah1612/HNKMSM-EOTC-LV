@@ -75,10 +75,18 @@ class AddToPaymentCaseCartView(LoginRequiredMixin, View):
         membership = MembersUpdateInformation.objects.filter(user=request.user).first()
         
         # Ensure the user has only one active cart; create if none exists
-        cart, _ = CartPayment.objects.get_or_create(
-            user=request.user,
-            membersID=membership  # Ensure this is the correct membership instance
-        )
+        if membership:
+            try:
+                cart, created = CartPayment.objects.get_or_create(
+                    user=request.user,
+                    membersID=membership  # Ensure this is the correct membership instance
+                )
+            except Exception as e:
+                # Log the error and handle the exception
+                logger.error(f"Error creating or retrieving cart: {e}")
+                return redirect('Error creating or retrieving cart')  # Replace with an appropriate error page
+        else:
+            return redirect('members:member_create') 
         
         # Check if the item already exists in the cart
         cart_item, created = CartPaymentCases.objects.get_or_create(

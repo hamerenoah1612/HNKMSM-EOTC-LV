@@ -6,13 +6,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView
-from django.views.generic import ListView, DetailView,UpdateView
+from django.views.generic import ListView, DetailView,UpdateView,CreateView
 from .models import (
     BaptizedCertification, Sermon, SermonCategory, SermonMedia,
-    FatherOfRepentanceLists, GroupMassageToSonOfRepentance,)
+    FatherOfRepentanceLists, GroupMassageToSonOfRepentance,FuneralServicesApplication)
 from members.models import MembersUpdateInformation
 from django.contrib.auth.models import User
-from .forms import BaptizedApplicationForm, BaptizedApplicationUpdatingForm
+from .forms import BaptizedApplicationForm, BaptizedApplicationUpdatingForm,FuneralServicesApplication
 class ServicesView(TemplateView):
     template_name = 'services/servicesView.html'
 
@@ -109,6 +109,26 @@ class HolyCommunionServicesView(TemplateView):
 #Funeral Services 
 class FuneralServicesView(TemplateView):
     template_name = 'services/funeralServicesView.html'
+    
+class CreateFuneralServicesView(CreateView, LoginRequiredMixin):
+    model = FuneralServicesApplication
+    template_name = 'services/funeralServicesView.html'
+    form_class = FuneralServicesApplication
+    success_url = reverse_lazy('services:funeralServices')
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     title = form.cleaned_data.get('title')
+    #     author = form.cleaned_data.get('author')
+    #     published_date = form.cleaned_data.get('published_date')
+        
+    #     # Check if a book with the same title, author, and published date already exists
+    #     if BooksLibrary.objects.filter(title=title, author=author, published_date=published_date).exists():
+    #         form.add_error(None, "A book with the same title, author, and published date already exists.")
+    #         return self.form_invalid(form)
+        
+    #     return super().form_valid(form)
+    
 #WeddingServicesView
 class WeddingServicesView(TemplateView):
     template_name ='services/weddingServices.html'
