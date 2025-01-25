@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DEBUG mode: Use False in production, True in development
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = True
-
+SECRET_KEY = config('SECRET_KEY')
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
     'hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
@@ -224,7 +224,7 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-
+DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
