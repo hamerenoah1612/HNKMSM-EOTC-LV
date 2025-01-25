@@ -20,8 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 
 # DEBUG mode: Use False in production, True in development
-DEBUG = config('DEBUG', default=False, cast=bool)
-
+# DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
