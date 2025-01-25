@@ -3,7 +3,8 @@ from .models import (SermonCategory, SermonSeries,
 Sermon, SermonMedia, 
 Comment, BaptizedCertification,
 FatherOfRepentanceLists,
-GroupMassageToSonOfRepentance
+GroupMassageToSonOfRepentance,
+FuneralServicesApplication
 )
 
 @admin.register(SermonSeries)
@@ -66,3 +67,20 @@ class FatherOfRepentanceListsAdmin(admin.ModelAdmin):
 class GroupMassageToSonOfRepentanceAdmin(admin.ModelAdmin):
     list_display = ('father_of_repentance', 'message', 'sent_at')
   
+@admin.register(FuneralServicesApplication)
+class FuneralServicesApplicationAdmin(admin.ModelAdmin):
+    list_display = (
+        'full_name', 
+        'deceased_full_name', 
+        'date_of_passing', 
+        'church_name', 
+        'preferred_date', 
+        'is_paid', 
+        'created', 
+        'updated'
+    )
+    list_filter = ('is_paid', 'preferred_date', 'created')
+    search_fields = ('full_name', 'deceased_full_name', 'phone_number', 'church_name')
+    prepopulated_fields = {'slug': ('full_name',)}
+    readonly_fields = ('created', 'updated')
+    ordering = ('-created',)

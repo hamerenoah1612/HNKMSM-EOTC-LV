@@ -165,4 +165,38 @@ class GroupMassageToSonOfRepentance(models.Model):
         return f"Message from {self.father_of_repentance.full_name} at {self.sent_at}"
 
 
+
+class FuneralServicesApplication(models.Model):
+    # Applicant details
+    full_name = models.CharField(max_length=255, help_text="Full name of the applicant")
+    phone_number = models.CharField(max_length=15, help_text="Contact phone number")
+    email = models.EmailField(blank=True, null=True, help_text="Optional email address")
+    address = models.TextField(help_text="Address of the applicant")
+
+    # Deceased details
+    deceased_full_name = models.CharField(max_length=255, help_text="Full name of the deceased")
+    age = models.PositiveIntegerField(help_text="Age of the deceased")
+    date_of_passing = models.DateField(help_text="Date of passing")
+    place_of_death = models.CharField(max_length=255, help_text="Place where the deceased passed away")
+
+    # Service details
+    preferred_date = models.DateField(help_text="Preferred date for the funeral service")
+    church_name = models.CharField(max_length=255, help_text="Name of the church where the service will be held")
+    additional_requests = models.TextField(blank=True, null=True, help_text="Any additional requests or details")
+
+    # Administrative fields
+    is_paid = models.BooleanField(default=False, help_text="Indicates whether the required payment has been made")
+    slug = models.SlugField(unique=True, blank=True, help_text="Unique identifier for the application")
+    created = models.DateTimeField(auto_now_add=True, help_text="Date and time the application was created")
+    updated = models.DateTimeField(auto_now=True, help_text="Date and time the application was last updated")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            value = str(f"{self.full_name}-{self.created}")
+            self.slug = unique_slug(value, type(self))
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return f"Funeral Service Application for {self.deceased_full_name} by {self.full_name}"
+
 #Memorial Service

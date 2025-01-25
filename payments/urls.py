@@ -34,7 +34,7 @@ urlpatterns = [
     path('cancel/', PaymentCancelView.as_view(), name='cancel'),
     path('webhook/', stripe_webhook, name='webhook'),
     
-    
+    #stripe listen --forward-to https://hnkmsm-eotc-lv-production.up.railway.app/webhook 
     #create_checkout_session
     # path('create-checkout-session/<slug:slug>/', views.create_checkout_session, name='create_checkout_session'),
     # path('success/', views.success_view, name='success'),
