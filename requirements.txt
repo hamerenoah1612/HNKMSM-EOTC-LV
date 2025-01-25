@@ -16,6 +16,7 @@ django-js-asset==2.2.0
 docutils==0.20
 gunicorn==23.0.0
 idna==3.4
+python-decouple==3.8
 oauthlib==3.2.2
 packaging==24.2
 Pillow==9.5.0
