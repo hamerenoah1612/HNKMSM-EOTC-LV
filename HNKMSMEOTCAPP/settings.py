@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DEBUG mode: Use False in production, True in development
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-
+SECRET_KEY = config('SECRET_KEY')
 
 # SendGrid API Key
 SENDGRID_API_KEY = config('DB_SENDGRID_API_KEY')
@@ -129,7 +129,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
                 # Add your context processor
                 'pages.context_processors.cart_and_notifications',
             ],

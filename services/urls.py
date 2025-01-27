@@ -6,10 +6,11 @@ from .views import (
     SermonMediaListView, 
     SermonMediaDetailView,
     BaptismServiceView,
-    FuneralServicesView,
     WeddingServicesView,
     FatherOfRepentanceListView, 
-    FatherOfRepentanceDetailView
+    FatherOfRepentanceDetailView,
+    CreateFuneralServicesView,
+    UpdateFuneralServicesApplication
     )
 
 app_name = 'services' 
@@ -19,7 +20,8 @@ urlpatterns = [
     path('holyCommunion/', HolyCommunionServicesView.as_view(), name='holyCommunion'),
     path('fatherOfRepentance/', FatherOfRepentanceListView.as_view(), name='fatherOfRepentance'),
     path('fathers/<slug:slug>/', FatherOfRepentanceDetailView.as_view(), name='father_of_repentance_detail'),
-    path('funeralServices/', FuneralServicesView.as_view(), name='funeralServices'),
+    path('createFuneralServices/', CreateFuneralServicesView.as_view(), name='createFuneralServices'),
+    path('updateFuneralServices/<slug:slug>/update/', UpdateFuneralServicesApplication.as_view(), name='updateFuneralServicesApplication'),
     path('weddingServices/', WeddingServicesView.as_view(), name='weddingServices'),
     path('sermon/', SermonServicesView.as_view(), name='sermon'),
     path('sermon_media/', SermonMediaListView.as_view(), name='sermon_media_list'),
