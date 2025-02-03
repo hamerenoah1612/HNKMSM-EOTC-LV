@@ -19,10 +19,11 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 
-# DEBUG mode: Use False in production, True in development
+
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = True
 SECRET_KEY = config('SECRET_KEY')
+
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
     'hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
@@ -68,7 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'corsheaders',
-    'ckeditor',
+    
     
     # Third-party
     'crispy_forms',
@@ -126,7 +127,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
                 # Add your context processor
                 'pages.context_processors.cart_and_notifications',
             ],

@@ -127,7 +127,7 @@
                                 <h5 class="mb-3">ፍተዓት አገልግሎት Funeral service</h5>
                                 <p class="mb-4 small">የቀብር  ፅሎተ  ፍተዓት  አገልግሎት "ጽድቅን አድርግ፥ ምሕረትን ውደድ፥ ከአምላክህ ጋር በትሕትና ተመላለስ።" ሚክያስ 6:8</p>
                                 {% if user.is_authenticated %}
-                                <a href="{% url "services:funeralServices" %}" class="btn btn-primary px-4 py-2 rounded-pill">Start</a>
+                                <a href="{% url "services:createFuneralServices" %}" class="btn btn-primary px-4 py-2 rounded-pill">Start</a>
                                 {% else %}
                                 <a href="{% url 'account_login'%}" class="btn btn-primary px-4 py-2 rounded-pill">Start</a>
                                 {% endif %}

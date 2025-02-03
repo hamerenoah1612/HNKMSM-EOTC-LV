@@ -164,10 +164,9 @@ class GroupMassageToSonOfRepentance(models.Model):
     def __str__(self):
         return f"Message from {self.father_of_repentance.full_name} at {self.sent_at}"
 
-
-
 class FuneralServicesApplication(models.Model):
     # Applicant details
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default='1')
     full_name = models.CharField(max_length=255, help_text="Full name of the applicant")
     phone_number = models.CharField(max_length=15, help_text="Contact phone number")
     email = models.EmailField(blank=True, null=True, help_text="Optional email address")
@@ -183,7 +182,8 @@ class FuneralServicesApplication(models.Model):
     preferred_date = models.DateField(help_text="Preferred date for the funeral service")
     church_name = models.CharField(max_length=255, help_text="Name of the church where the service will be held")
     additional_requests = models.TextField(blank=True, null=True, help_text="Any additional requests or details")
-
+    location_preferred = models.CharField(max_length=255, blank=True, null=True, help_text="location preferred where the service will be held")
+    
     # Administrative fields
     is_paid = models.BooleanField(default=False, help_text="Indicates whether the required payment has been made")
     slug = models.SlugField(unique=True, blank=True, help_text="Unique identifier for the application")

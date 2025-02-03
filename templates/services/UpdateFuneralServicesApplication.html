@@ -1,0 +1,71 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block javascript %}
+   {% comment %} <script type="text/javascript" src="{% static '' %}" defer ></script> {% endcomment %}
+{% endblock %}
+{% block title %}update Funeral Services{% endblock %}
+{% block main %}
+<div class="container mt-2">
+    <!-- breadcrumb -->
+    <div class="event pb-5">
+        <div class="mx-auto wow bounceInUp rounded-1" 
+            style="background-image: url('{% static "img/heroAccount-13.png" %}');background-size: cover; background-position: center center; background-repeat: no-repeat; " alt="Church-at" data-wow-delay="0.1s">
+            <div class="container py-3 mt-0 ">
+                <div class="animated bounceInDown small">
+                    <ol class="breadcrumb justify-content-start mb-0 animated bounceInDown small">
+                        <li class=""><a href="{% url 'pages:homepage' %}">Home <span class="px-1">\</span></a></li>
+                        <li class=""><a href="{% url 'services:service' %}">Services <span class="px-1">\</span></a></li>
+                        <li class=""><a href="{% url 'services:createFuneralServices' %}">createFuneral<span class="px-1">\</span></a></li>
+                        <li class="" aria-current="page">updateFuneralServices</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- breadcrumb Start -->
+            <div class="text-center py-2 px-3 ">
+                <h1 class="mb-2 text-light fs-4 small">update Funeral Services Application</1>
+                <h6  class="mb-2 bolder text-light small">የቀብር  ፍተዓት ፅሎተ</h6>
+                <h6  class="mb-2 bolder text-light small">የቀብር  ፍተዓት ፅሎተ  አገልግሎት "ጽድቅን አድርግ፥ ምሕረትን ውደድ፥ ከአምላክህ ጋር በትሕትና ተመላለስ።" ሚክያስ 6:8</h6>
+            </div>
+        </div>
+    </div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <h2 class="mb-4">Update Funeral Services Application</h2>
+            <hr class="pb-2">
+            <div class="card border border-primary p-2">
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">
+                                Update Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="mt-4 d-flex justify-content-center gap-2">
+                <a href="{% url 'payments:payment_case_list' %}" 
+                    class="btn  btn-sm btn-success px-4 py-2 rounded-pill">
+                    Go to Payment Cases
+                </a>
+                <a href="{% url 'services:createFuneralServices' %}" 
+                    class="btn btn-sm btn-secondary px-4 py-2 rounded-pill">
+                    Back 
+                </a>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block javascript %}
    {% comment %} <script type="text/javascript" src="{% static '' %}" defer ></script> {% endcomment %}
 {% endblock %}
@@ -31,18 +32,26 @@
     <div class="accordion accordion-flush " id="accordionFlushExample">
         <div class="breadcrumb d-fex justify-content-center gap-2">
             <div class="h6">
-                <button class="rounded btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                <button class="rounded-pill btn btn-sm btn-primary collapsed py-3 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                     <i class="bi bi-box-arrow-in-down-right px-2 fs-6"></i>Service Description and Importance 
                 </button>
             </div>
+            {% if not funeralServices == 'None' %}
             <div class="h6">
-                <button class="rounded btn btn-sm btn-primary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="true" aria-controls="flush-collapseTwo">
+                <button class="rounded-pill btn btn-sm btn-primary collapsed py-3 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwofuneralServices" aria-expanded="false" aria-controls="flush-collapseTwofuneralServices">
+                    <i class="bi bi-box-arrow-in-down-right px-2 fs-6"></i> Your Application submitted successfully click to View
+                </button>
+            </div>
+            {% else %}
+            <div class="h6">
+                <button class="rounded-pill btn btn-sm btn-primary collapsed py-3 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
                     <i class="bi bi-box-arrow-in-down-right px-2 fs-6"></i> Submit Application Form and Book Reservation 
                 </button>
             </div>
+            {% endif %}
         </div>
         <div class="accordion-item small">
-          <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" style="">
+          <div id="flush-collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFlushExample" style="">
             <div class="accordion-body">
                 <div class="card border-0">
                     <div class="card-header px-1 bg-white">
@@ -187,15 +196,82 @@
             </div>
           </div>
         </div>
+        {% if not funeralServices == 'None' %}
+        <div class="accordion-item small">
+            <div id="flush-collapseTwofuneralServices" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample" style="">
+              <div class="accordion-body">
+                  <div class="container mt-5">
+                      <div class="row justify-content-center">
+                          <div class="col-lg-6 col-md-8">
+                              <h2 class="text-center mb-2">Your Funeral Services Application info</h2>
+                              <div class="alert alert-light mt-4 bolder border-primary">
+                                <h4>Funeral Service Details</h4>
+                                <hr>
+                                <p><strong>Deceased Name:</strong> {{ funeralServices.deceased_full_name }}</p>
+                                <hr>
+                                <p><strong>Age:</strong> {{ funeralServices.age }}</p>
+                                <hr>
+                                <p><strong>Preferred Date:</strong> {{ funeralServices.preferred_date }}</p>
+                                <hr>
+                                <p><strong>Church Name:</strong> {{ funeralServices.church_name }}</p>
+                                <hr>
+                                <p><strong>preferred location :</strong> {{ funeralServices.location_preferred }}</p>
+                            </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-md-8 justify-content-center ">
+                                    <div class="btn-group gap-2 small">
+                                        <a href="{% url 'payments:payment_case_list' %}"
+                                        class="btn btn-sm btn-success px-3 py-2 rounded-pill">
+                                            Start Payment Process
+                                        </a>
+                                        <a href="{% url 'services:updateFuneralServicesApplication' slug=funeralServices.slug %}" 
+                                        class="btn btn-sm btn-primary px-3 py-2 rounded-pill">
+                                            Update Application
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} <div class="row justify-content-center py-4">
+                                <div class="col-lg-6 col-md-8 justify-content-center ">
+                                    <div class="card border border-primary bg-dark text-light">
+                                        <div class="card-body text-center p-2 ">
+                                            <p class="small">የቀብር  ፍተዓት ፅሎተ   አገልግሎት "ጽድቅን አድርግ፥ ምሕረትን ውደድ፥ ከአምላክህ ጋር በትሕትና ተመላለስ።" ሚክያስ 6:8</p>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div> {% endcomment %}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
         <div class="accordion-item small">
           <div id="flush-collapseTwo" class="accordion-collapse collapse " data-bs-parent="#accordionFlushExample" style="">
             <div class="accordion-body">
-                Application Form
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8">
+                            <h1 class="text-center mb-4">Funeral Services Application</h1>
+                            <form method="post" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                {{form|crispy  }}
+                                
+                                {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                                {% endfor %}
+                                
+                                <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
+        {% endif %}
     </div>
-    
-   
 </div>
 {% endblock %}

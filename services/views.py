@@ -8,11 +8,18 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import ListView, DetailView,UpdateView,CreateView
 from .models import (
-    BaptizedCertification, Sermon, SermonCategory, SermonMedia,
-    FatherOfRepentanceLists, GroupMassageToSonOfRepentance,FuneralServicesApplication)
+    BaptizedCertification, Sermon, 
+    SermonCategory, SermonMedia,
+    FatherOfRepentanceLists, 
+    GroupMassageToSonOfRepentance,
+    FuneralServicesApplication
+    )
 from members.models import MembersUpdateInformation
-from django.contrib.auth.models import User
-from .forms import BaptizedApplicationForm, BaptizedApplicationUpdatingForm,FuneralServicesApplication
+from .forms import ( BaptizedApplicationForm, 
+                    BaptizedApplicationUpdatingForm,
+                    FuneralServicesApplicationForm,
+                    FuneralServicesApplicationUpdatingForm
+                    )
 class ServicesView(TemplateView):
     template_name = 'services/servicesView.html'
 
@@ -106,28 +113,49 @@ class HolyCommunionServicesView(TemplateView):
     template_name = 'services/holyCommunion.html'
     
 
-#Funeral Services 
-class FuneralServicesView(TemplateView):
-    template_name = 'services/funeralServicesView.html'
-    
-class CreateFuneralServicesView(CreateView, LoginRequiredMixin):
+
+class CreateFuneralServicesView(LoginRequiredMixin, CreateView):
     model = FuneralServicesApplication
     template_name = 'services/funeralServicesView.html'
-    form_class = FuneralServicesApplication
-    success_url = reverse_lazy('services:funeralServices')
+    form_class = FuneralServicesApplicationForm
+    success_url = reverse_lazy('services:createFuneralServices')
 
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user
-    #     title = form.cleaned_data.get('title')
-    #     author = form.cleaned_data.get('author')
-    #     published_date = form.cleaned_data.get('published_date')
-        
-    #     # Check if a book with the same title, author, and published date already exists
-    #     if BooksLibrary.objects.filter(title=title, author=author, published_date=published_date).exists():
-    #         form.add_error(None, "A book with the same title, author, and published date already exists.")
-    #         return self.form_invalid(form)
-        
-    #     return super().form_valid(form)
+    def form_valid(self, form):
+        form.instance.user = self.request.user  # Assuming 'user' is a field in the model
+
+        # Check if an application already exists for the user
+        if FuneralServicesApplication.objects.filter(user=form.instance.user).exists():
+            form.add_error(None, "A Funeral Services Application already exists.")
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Fetch the existing application for the user
+        funeralServices = FuneralServicesApplication.objects.filter(user=self.request.user).first()
+        if funeralServices:
+            context['funeralServices'] = funeralServices
+        else :
+            context['funeralServices'] = 'None'
+        return context
+  
+#Funeral Services UpdateFuneralServicesApplication
+class UpdateFuneralServicesApplication(LoginRequiredMixin, UpdateView):
+    model = FuneralServicesApplication
+    template_name = 'services/UpdateFuneralServicesApplication.html'
+    form_class = FuneralServicesApplicationUpdatingForm
+    success_url = reverse_lazy('services:createFuneralServices')
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        return FuneralServicesApplication.objects.filter(user=self.request.user)
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Your Funeral application information has been updated successfully!')
+        return super().form_valid(form)
+      
     
 #WeddingServicesView
 class WeddingServicesView(TemplateView):
