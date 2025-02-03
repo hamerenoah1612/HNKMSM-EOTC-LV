@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DEBUG mode: Use False in production, True in development
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = True
+
 SECRET_KEY = config('SECRET_KEY')
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
@@ -239,16 +240,18 @@ TIME_ZONE = 'UTC'  # or your desired timezone
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static',]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-WHITENOISE_MANIFEST_STRICT = False
+
+# MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+# WHITENOISE_MANIFEST_STRICT = False
 
 
 
@@ -262,16 +265,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-
-# STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
-# STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
-# STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
-# STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
-
-# STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'DB_STRIPE_SECRET_KEY')
-# STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'DB_STRIPE_PUBLISHABLE_KEY')
-# STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET' , 'DB_STRIPE_WEBHOOK_SECRET')
-# STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET','DB_STRIPE_ENDPOINT_SECRET')
 
 # Stripe configuration
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
