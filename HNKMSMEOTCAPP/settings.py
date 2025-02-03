@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'corsheaders',
-    'ckeditor',
+    
     
     # Third-party
     'crispy_forms',

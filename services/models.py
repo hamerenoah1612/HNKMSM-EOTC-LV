@@ -164,8 +164,6 @@ class GroupMassageToSonOfRepentance(models.Model):
     def __str__(self):
         return f"Message from {self.father_of_repentance.full_name} at {self.sent_at}"
 
-
-
 class FuneralServicesApplication(models.Model):
     # Applicant details
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default='1')

@@ -4,8 +4,8 @@ from django.forms import ValidationError
 from common.utils.text import unique_slug
 from django.utils import timezone
 from decimal import Decimal
-import uuid
 from members.models import MembersUpdateInformation
+import uuid
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
