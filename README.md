@@ -23,3 +23,4 @@ web app objectives
 መመሪያ | Guidance መንፈሳዊ መመሪያን እና ድጋፍን መስጠት፣ አማኞች ፈተናዎችን እንዲያሸንፉ እና ከእግዚአብሔር ጋር ባላቸው ግንኙነት እንዲያድጉ መርዳት። Provide spiritual guidance and support, helping believers navigate challenges and grow in their relationship with God.
 "# HNKMSM-EOTC-LV" 
 ![HNKSMATEOTC_LV](https://github.com/user-attachments/assets/37cfdebd-a414-47e5-abc3-822799e911ad)
+![HNKSMATEOTC_LV web app ]((https://hnkmsm-eotc-lv-production.up.railway.app/))
