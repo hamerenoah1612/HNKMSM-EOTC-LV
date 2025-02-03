@@ -206,16 +206,6 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # EMAIL_HOST_PASSWORD = 'your-app-password'  # App password or account password
 # DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 
-# EMAIL
-
-# SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY','L_DB_SENDGRID_API_KEY')
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'apikey'
-# EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD','DB_EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
-
 # Email configuration
 SENDGRID_API_KEY = config('SENDGRID_API_KEY') 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
