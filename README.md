@@ -1,4 +1,5 @@
 # HNKMSM-EOTC-LV
+
 web app objectives
 መጠበቅ | Preservation: ->የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ክርስትናን የተቀደሰ አስተምህሮ በትምህርት ግብአት እና መስተጋብራዊ መድረኮችን ማስጠበቅ። ->Uphold Ethiopian Orthodox Tewahedo Christianity's sacred teachings through educational resources and interactive platforms.
 
@@ -21,5 +22,7 @@ web app objectives
 ማበረታታት | Empowerment: አማኞች እምነታቸውን እንዲካፈሉ፣ የጌታችን የመድኃኒታችን የኢየሱስ ክርስቶስን ትምህርት አና መልእክት በማስፋፋት እና ለውጥን የሚያነሳሳ። Empower believers to share their faith, spreading the message of The teachings of our Lord and Savior Jesus Christ and inspiring change.
 
 መመሪያ | Guidance መንፈሳዊ መመሪያን እና ድጋፍን መስጠት፣ አማኞች ፈተናዎችን እንዲያሸንፉ እና ከእግዚአብሔር ጋር ባላቸው ግንኙነት እንዲያድጉ መርዳት። Provide spiritual guidance and support, helping believers navigate challenges and grow in their relationship with God.
+
 "# HNKMSM-EOTC-LV" 
 ![HNKSMATEOTC_LV](https://github.com/user-attachments/assets/37cfdebd-a414-47e5-abc3-822799e911ad)
+![HNKSMATEOTC_LV web app ]((https://hnkmsm-eotc-lv-production.up.railway.app/))

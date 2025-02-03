@@ -85,9 +85,11 @@ class AddToPaymentCaseCartView(LoginRequiredMixin, View):
                 # Log the error and handle the exception
                 logger.error(f"Error creating or retrieving cart: {e}")
                 return redirect('Error creating or retrieving cart')  # Replace with an appropriate error page
+
+
         else:
             return redirect('members:member_create') 
-        
+
         # Check if the item already exists in the cart
         cart_item, created = CartPaymentCases.objects.get_or_create(
             cart=cart,
