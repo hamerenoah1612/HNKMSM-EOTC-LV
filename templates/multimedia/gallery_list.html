@@ -3,10 +3,10 @@
 {% load crispy_forms_tags %}
 {% block title %}gallery List{% endblock %}
 {% block main %}
-<div class="container">
+<div class="container ">
      <!-- breadcrumb -->
-     <div class="event pb-4">
-        <div class="mx-auto wow bounceInUp rounded-1" 
+     <div class="event pb-4 pt-1">
+        <div class="mx-auto wow bounceInUp rounded" 
             style="background-image: url('{% static "img/heroAccount-13.png" %}');background-size: cover; background-position: center center; background-repeat: no-repeat; " alt="Church-at" data-wow-delay="0.1s">
             <div class="container py-3 mt-0 small">
                 <div class="animated bounceInDown ">
@@ -15,6 +15,11 @@
                         <li class="small"> <a href="{% url "multimedia:multimedia" %}">multimedia<span class="px-1">\</span></a></li>
                         <li class="small" aria-current="page">GalleryList</li>
                     </ol>
+                </div>
+                <!-- breadcrumb Start -->
+                <div class="text-center py-1">
+                    <h1 class="mb-3 bolder text-light fs-3">Gallery List</h1>
+                    <h1 class="fs-6 mb-2 text-light">select from the list</1>
                 </div>
             </div>
         </div>
@@ -26,12 +31,16 @@
         <div class="col-md-4">
             <div class="card mb-4 shadow">
                 {% if media.media_type == 'Photo' %}
-                <img src="{{ media.file.url }}" width="100%" height="200"  class="card-img-top" alt="{{ media.title }}">
+                    {% if media.file %}
+                    <img src="{{ media.file.url }}" width="100%" height="200"  class="card-img-top" alt="{{ media.title }}">
+                    {% else %}
+                    <img src="{% static "img/placeholder.png" %}" alt="{{ media.title }}" class="card-img-top" style="width: 100%; height: 200px;">
+                    {% endif %}
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ media.title }}</h5>
+                    <h6 class="card-title small">{{ media.title }}</h6>
                     <hr/>
-                    <a href="{% url 'multimedia:gallery_detail' slug=media.slug %}" class="btn btn-sm btn-outline-primary">view Detail</a>
+                    <a href="{% url 'multimedia:gallery_detail' slug=media.slug %}" class="btn btn-sm btn-outline-primary">View Detail</a>
                 </div>
             </div>
         </div>

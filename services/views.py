@@ -112,8 +112,6 @@ class BaptizedApplicationUpdatingView(LoginRequiredMixin, UpdateView):
 class HolyCommunionServicesView(TemplateView):
     template_name = 'services/holyCommunion.html'
     
-
-
 class CreateFuneralServicesView(LoginRequiredMixin, CreateView):
     model = FuneralServicesApplication
     template_name = 'services/funeralServicesView.html'
@@ -155,12 +153,10 @@ class UpdateFuneralServicesApplication(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, 'Your Funeral application information has been updated successfully!')
         return super().form_valid(form)
-      
-    
+         
 #WeddingServicesView
 class WeddingServicesView(TemplateView):
     template_name ='services/weddingServices.html'
- 
  
 # ListView for displaying all Fathers of Repentance
 class FatherOfRepentanceListView(ListView):

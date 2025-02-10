@@ -5,7 +5,7 @@
 {% block main %}
 <div class="container">
     <!-- breadcrumb -->
-    <div class="event pb-4">
+    <div class="event pb-4 pt-1">
         <div class="mx-auto wow bounceInUp rounded-1" 
             style="background-image: url('{% static "img/heroAccount-13.png" %}');background-size: cover; background-position: center center; background-repeat: no-repeat; " alt="Church-at" data-wow-delay="0.1s">
             <div class="container py-1 mt-0 small">
@@ -14,19 +14,23 @@
                         <li class="small"><a href="{% url 'pages:homepage' %}">Home <span class="px-1">\</span></a></li>
                         <li class="small"> <a href="{% url "multimedia:multimedia" %}">Multimedia<span class="px-1">\</span></a></li>
                         <li class="small"> <a href="{% url "multimedia:gallery_list" %}">GalleryList<span class="px-1">\</span></a></li>
-                        <li class="small" aria-current="page">galleryDetaile</li>
+                        <li class="small" aria-current="page">galleryDetail</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
    
-    <h1 class="fs-4 text-primary">{{ media_item.title }}</h1>
+    <h3 class="fs-5 text-primary">{{ media_item.title }}</h3>
     <hr/>
     <div class="row">
         <div class="col-md-8 rounded">
             {% if media_item.media_type == 'Photo' %}
-            <img src="{{ media_item.file.url }}" width="100%" height="250" class="img-fluid" alt="{{ media_item.title }}">
+                    {% if media_item.file %}
+                    <img src="{{ media_item.file.url }}" width="100%" height="250" class="img-fluid" alt="{{ media_item.title }}">
+                    {% else %}
+                    <img src="{% static "img/placeholder.png" %}" alt="{{ media_item.title }}" class="card-img-top" style="width: 100%; height: 250px;">
+                    {% endif %}
             {% elif media_item.media_type == 'Video' %}
             <video controls class="img-fluid">
                 <source src="{{ media_item.file.url }}" type="video/mp4">
