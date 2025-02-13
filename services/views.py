@@ -13,13 +13,14 @@ from .models import (
     FatherOfRepentanceLists, 
     GroupMassageToSonOfRepentance,
     FuneralServicesApplication
-    )
+)
 from members.models import MembersUpdateInformation
-from .forms import ( BaptizedApplicationForm, 
-                    BaptizedApplicationUpdatingForm,
-                    FuneralServicesApplicationForm,
-                    FuneralServicesApplicationUpdatingForm
-                    )
+from .forms import ( 
+    BaptizedApplicationForm, 
+    BaptizedApplicationUpdatingForm,
+    FuneralServicesApplicationForm,
+    FuneralServicesApplicationUpdatingForm
+)
 class ServicesView(TemplateView):
     template_name = 'services/servicesView.html'
 

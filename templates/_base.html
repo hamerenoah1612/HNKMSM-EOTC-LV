@@ -20,9 +20,9 @@
         <!-- Icon Font Stylesheet -->
         <link href="{% static 'css/use.fontawesome.com/releases/v5.15.4/css/all.css' %}" rel="stylesheet" >
         <!-- Libraries Stylesheet -->
-        <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+        {% comment %} <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
         <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet"> {% endcomment %}
         <!-- Add this in your base.html in the <head> section -->  
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet">
         <!-- Customized Bootstrap Stylesheet -->
@@ -393,12 +393,12 @@
 
         <!-- JavaScript Libraries -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+        {% comment %} <script src="{% static 'lib/wow/wow.min.js' %}"></script>
         <script src="{% static 'lib/easing/easing.min.js' %}"></script>
         <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
         <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
         <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
-        <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script> {% endcomment %}
 
         <!-- Template Javascript -->
         <script type="text/javascript" src="{% static 'js/main.js' %}" async></script>

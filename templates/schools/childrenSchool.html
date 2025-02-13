@@ -193,14 +193,14 @@
                                                                             {% if progres.course.title == course.title %}
                                                                             {% if progres.is_chapter_completed %}
                                                                             {% comment %} let you re-take {% endcomment %}
-                                                                            <form method="post" action="{% url "schools:youthSchool" %}">
+                                                                            <form method="post" action="{% url "schools:childrenSchool" %}">
                                                                                 {% csrf_token %}  
                                                                                 <input type="hidden" name="course_id_retake" value="{{course.id}}">
                                                                                 <button class="btn btn-sm btn-outline-primary my-3 d-none" type="submit">Are you sure you want retake the Quiz?</button>
                                                                             </form> 
                                                                             {% else %}
                                                                             {% comment %} requist to take for the first time {% endcomment %}
-                                                                            <form method="post" action="{% url "schools:youthSchool" %}">
+                                                                            <form method="post" action="{% url "schools:childrenSchool" %}">
                                                                                 {% csrf_token %}  
                                                                                 <input type="hidden" name="course_id" value="{{course.id}}">
                                                                                 <button class="btn btn-sm btn-outline-primary my-3" type="submit">Are you ready to take a Quiz?</button>
@@ -214,7 +214,7 @@
                                                                 </div>
                                                                 <div class="tab-pane fade" id="nav-profile-{{ forloop.counter }}" role="tabpanel" aria-labelledby="nav-profile-tab-{{ forloop.counter }}">
                                                                     {% if course.school_type == 'sundaySchoolChildren' %}
-                                                                    {% comment %} quiz or result {% endcomment %}
+                                                                    
                                                                     {% if progress %}
                                                                         {% for progres in progress %}
                                                                             {% if progres.course.title == course.title %}
@@ -249,7 +249,7 @@
                                                                                                                         <span class="badge rounded-pill text-danger">YOU NOT PASSED</span>
                                                                                                                     </h6>
                                                                                                                     <h6 class="text-primary mx-4">{% comment %} let you re-take {% endcomment %}
-                                                                                                                        <form method="post" action="{% url "schools:youthSchool" %}">
+                                                                                                                        <form method="post" action="{% url "schools:childrenSchool" %}">
                                                                                                                             {% csrf_token %}  
                                                                                                                             <input type="hidden" name="course_id_retake" value="{{course.id}}">
                                                                                                                             <button class="btn btn-sm btn-outline-primary" type="submit">Retake the Quiz?</button>
@@ -295,11 +295,52 @@
                                                                                 {% comment %} quiz {% endcomment %}
                                                                                 <div class="text-start border rounded p-3">
                                                                                     {% for chapter_data in chapters_with_resources %}
-                                                                                    {% if chapter_data.quizzes %}
-                                                                                    {% for quiz in chapter_data.quizzes %}
+                                                                                        {% if chapter_data.quizzes %}
+                                                                                            {% for quiz in chapter_data.quizzes %}
+                                                                                                {% if quiz.chapter.course.title == course.title %}
+                                                                                                    <h4 class="py-2 text-center">{{ quiz.quiz_title }}</h4>
+                                                                                                    <form method="post" action="{% url "schools:childrenSchool" %}">
+                                                                                                        {% csrf_token %}
+                                                                                                        <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+                                                                                                    
+                                                                                                            {% for question in chapter_data.questions %}
+                                                                                                                {% if question.quiz_id == quiz.id %}
+                                                                                                                    <h6 class="py-2"> {{forloop.counter}}) 
+                                                                                                                        <span class="mx-2">{{ question.text }}</span></h6>
+                                                                                                                
+                                                                                                                        {% for answer in question.answer_set.all %}
+                                                                                                                            <p class="h6 text-dark small py-2 mx-3">
+                                                                                                                                <input class="option-input radio" 
+                                                                                                                                type="radio" 
+                                                                                                                                name="question{{ question.id }}" 
+                                                                                                                                value="{{ answer.id }}">
+                                                                                                                                <span class="px-2">{{ answer.text }}</span>
+                                                                                                                            </p>
+                                                                                                                        {% endfor %}
+                                                                                                                    
+                                                                                                                {% endif %}
+                                                                                                            {% endfor %}
+                                                                                                        <div class="d-grid gap-2 col-6 mx-auto">
+                                                                                                            <button class="btn btn-sm btn-outline-primary" type="submit">Submit Quiz</button>
+                                                                                                        </div>    
+                                                                                                    </form>
+                                                                                                {% endif %}
+                                                                                            {% endfor %}
+                                                                                        {% endif %}
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                                {% endif %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    {% else %}
+                                                                    {% comment %} quiz {% endcomment %}
+                                                                    <div class="text-start border rounded p-3">
+                                                                        {% for chapter_data in chapters_with_resources %}
+                                                                            {% if chapter_data.quizzes %}
+                                                                                {% for quiz in chapter_data.quizzes %}
                                                                                     {% if quiz.chapter.course.title == course.title %}
                                                                                         <h4 class="py-2 text-center">{{ quiz.quiz_title }}</h4>
-                                                                                        <form method="post" action="{% url "schools:youthSchool" %}">
+                                                                                        <form method="post" action="{% url "schools:childrenSchool" %}">
                                                                                             {% csrf_token %}
                                                                                             <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
                                                                                         
@@ -325,13 +366,10 @@
                                                                                             </div>    
                                                                                         </form>
                                                                                     {% endif %}
-                                                                                    {% endfor %}
-                                                                                    {% endif %}
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                                {% endif %}
+                                                                                {% endfor %}
                                                                             {% endif %}
                                                                         {% endfor %}
+                                                                    </div>
                                                                     {% endif %} 
                                                                     {% endif %} 
                                                                 </div>
@@ -405,7 +443,7 @@
                                                                         <!-- Comment form-->
                                                                         <div class='border rounded p-2 my-2'>
                                                                             
-                                                                            <form class="mb-4" method="POST" action="{% url "schools:youthSchool" %}">
+                                                                            <form class="mb-4" method="POST" action="{% url "schools:childrenSchool" %}">
                                                                                 {% csrf_token %}
                                                                                <input type="hidden" name="course" id="id_course" value="{{course.id}}"> 
                                                                                <div id="div_id_question" class="mb-3"> 
@@ -619,7 +657,7 @@
                                                                                 <h6 class="text-primary small">
                                                                                     <div class="btn-group gap-1 mx-auto">
                                                                                         {% for rating in "12345" %}
-                                                                                            <form method="post" action="{% url 'schools:youthSchool' %}">
+                                                                                            <form method="post" action="{% url 'schools:childrenSchool' %}">
                                                                                                 {% csrf_token %}
                                                                                                 <input type="hidden" name="faq_id" value="{{faq.id}}">
                                                                                                 <input type="hidden" name="satisfaction_rating" value="{{ rating }}">

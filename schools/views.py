@@ -34,18 +34,20 @@ class SchoolsChildrenSchool(TemplateView):
         for chapter in chapters:
             resources = Resources.objects.filter(chapter=chapter)
             quizzes = Quiz.objects.filter(chapter=chapter)
+           
             get_questions = Question.objects.filter(quiz__chapter=chapter)
             
             # Generate random questions
             if len(get_questions) > 5:
                 # if have more than 5 questions we gen have random 5 questions 
                 questions = sample(list(get_questions), min(5, len(get_questions)))  
+                
             else : 
                 questions = get_questions
             
             if chapter.course.school_type == 'sundaySchoolChildren':
                 is_children = True
-           
+               
             chapters_with_resources.append({
                  'chapter': chapter, 
                  'resources': resources, 
@@ -53,7 +55,7 @@ class SchoolsChildrenSchool(TemplateView):
                  'questions': questions, 
                  'reports': reports,
                  })
-                       
+        # print(chapters_with_resources)               
         context = {
             'is_children':is_children,
             'chapters_with_resources': chapters_with_resources, 
