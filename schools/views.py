@@ -47,7 +47,8 @@ class SchoolsChildrenSchool(TemplateView):
             
             if chapter.course.school_type == 'sundaySchoolChildren':
                 is_children = True
-               
+            else:
+                is_children = False
             chapters_with_resources.append({
                  'chapter': chapter, 
                  'resources': resources, 
@@ -206,7 +207,8 @@ class SchoolsYouthSchool(LoginRequiredMixin,View):
             
             if chapter.course.school_type == 'sundaySchoolYouth':
                 is_youth = True
-            
+            else:
+                is_youth = False
             chapters_with_resources.append({
                  'chapter': chapter, 
                  'resources': resources, 

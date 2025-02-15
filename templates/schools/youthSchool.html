@@ -71,7 +71,12 @@
                                                                 </div>
                                                             </div>
                                                         {% else %}
-                                                            <img src="{% static "img/Courses-palceHlder.png" %}" class="card-img-top" alt="Mystery-of-the-Holy-Communion">
+                                                            <div class="justify-content-center align-items-center" style="height: 200px; background-color:hsl(216, 33.30%, 97.10%); border-radius: 5px;">
+                                                                <i class="fas fa-cross text-primary py-5" style="font-size: 3rem;"></i>
+                                                                <div class="text-center">
+                                                                    <p class="mb-3 bolder text-secondary h3">{{ course.title }}</p>
+                                                                </div>
+                                                            </div>
                                                         {% endif %}
                                                         <div class="card-body">
                                                             {% if user.is_authenticated %}

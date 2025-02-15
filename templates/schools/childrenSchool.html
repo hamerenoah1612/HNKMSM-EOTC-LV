@@ -26,7 +26,7 @@
             </div>
             <!-- breadcrumb Start -->
             <div class="text-center ">
-                <h3 class="mb-3 bolder text-light">ልጆች ሰንበት ትምህርት ቤት</h3>
+                <h3 class="mb-3 bolder text-light">ለልጆች ሰንበት ትምህርት ቤት</h3>
                 <h3 class="mb-3 text-light ">children sunday School</3>
             </div>
         </div>
@@ -63,15 +63,23 @@
                                                     <div class="card shadow border-warning-church">
                                                         {% if course.image %}
                                                             <div class="m-1 wow bounceInUp" height="100%"
-                                                                style="border-radius: 5px; padding: 100px 0px; background-image: url('{{course.image.url}} '); background-size: cover; background-position: center top; background-repeat: no-repeat; " alt="Church-at" data-wow-delay="0.0s">
-                                                                {% comment %} <img width="600" height="200" src="{{ course.image.url }}" alt="Logo" class="img-fluid" >  {% endcomment %}
-                                                                <div class="text-center ">
-                                                                    <h3 class="mb-3 bolder text-light">{{ course.title }}</h3>
+                                                                style="border-radius: 5px; padding: 100px 0px; background-image: url('{{ course.image.url }}'); 
+                                                                background-size: cover; background-position: center top; background-repeat: no-repeat;" 
+                                                                alt="Church-at" data-wow-delay="0.0s">
+                                                                
+                                                                <div class="text-center">
+                                                                    <h3 class="mb-3 bolder text-secondary">{{ course.title }}</h3>
                                                                 </div>
                                                             </div>
                                                         {% else %}
-                                                            <img src="{% static "img/Courses-palceHlder.png" %}" class="card-img-top" alt="Mystery-of-the-Holy-Communion">
+                                                            <div class="justify-content-center align-items-center" style="height: 200px; background-color:hsl(216, 33.30%, 97.10%); border-radius: 5px;">
+                                                                <i class="fas fa-cross text-primary py-5" style="font-size: 3rem;"></i>
+                                                                <div class="text-center">
+                                                                    <p class="mb-3 bolder text-secondary h3">{{ course.title }}</p>
+                                                                </div>
+                                                            </div>
                                                         {% endif %}
+
                                                         <div class="card-body">
                                                             {% if user.is_authenticated %}
                                                             {% if progress %}

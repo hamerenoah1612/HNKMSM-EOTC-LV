@@ -128,23 +128,23 @@
                                     
                                 </a> 
                                 <div class="dropdown-menu bg-light border-2 border-primary small">
-                                    <a class="dropdown-item"><i class="fas fa-user px-1"></i> {{ user.username|capfirst }}</a>
+                                    <a class="dropdown-item"><i class="fas fa-user"></i><span class="p-3 small"> {{ user.username|capfirst }}</span></a>
                                     <hr class="m-0" />
-                                    <a href="{% url "pages:user-dashboard" %}" class="dropdown-item small"><i class="fas fa-clipboard px-1"></i>Dashboard</a>
-                                    <a href="{% url "members:member_list" %}" class="dropdown-item small"><i class="fas fa-users px-1"></i>Membership</a>
-                                    <a href="{% url "payments:payment_menu" %}" class="dropdown-item small"><i class="fas fa-money-check px-1"></i>Payment</a>
-                                    <a href="{% url 'my-account' %}" class="dropdown-item small"><i class="fas fa-user px-1"></i>my account</a>
+                                    <a href="{% url "pages:user-dashboard" %}" class="dropdown-item small"><i class="fas fa-clipboard"></i><span class="p-3">Dashboard</span></a>
+                                    <a href="{% url "members:member_list" %}" class="dropdown-item small"><i class="fas fa-users"></i><span class="p-3">Membership</span></a>
+                                    <a href="{% url "payments:payment_menu" %}" class="dropdown-item small"><i class="fas fa-money-check"></i><span class="p-3">Payment</span></a>
+                                    <a href="{% url 'my-account' %}" class="dropdown-item small"><i class="fas fa-user "></i><span class="p-3">my account</span></a>
                                     <hr class="m-0" />
                                     {% if not notification_count == 0 %}
-                                    <a href="{% url "events:user-notification" %}" class="dropdown-item small"><i class="bi bi-megaphone px-1"></i>Notification</a>
+                                    <a href="{% url "events:user-notification" %}" class="dropdown-item small"><i class="bi bi-megaphone"></i><span class="p-3">Notification</span></a>
                                     {% endif %}
                                     {% if not cart_count == 0 %}
-                                    <a href="{% url "payments:paymentCaseCart_view" %}" class="dropdown-item small"><i class="fas fa-shopping-cart px-1"></i>cart</a>
+                                    <a href="{% url "payments:paymentCaseCart_view" %}" class="dropdown-item small"><i class="fas fa-shopping-cart"></i><span class="p-3">cart</span></a>
                                     {% endif %}
                                     <hr class="m-0" />
                                     <form action="{% url 'account_logout' %}" method="post">
                                         {% csrf_token %}
-                                        <button class="btn btn-primary dropdown-item small"><i class="fas fa-sign-out-alt px-1"></i>Logout</button>
+                                        <button class="btn btn-primary dropdown-item small"><i class="fas fa-sign-out-alt"></i><span class="p-3">Logout</span></button>
                                     </form>
                                 </div>
                             </div>
@@ -289,7 +289,7 @@
                             <div class="d-flex flex-column align-items-start">
                                 {% if not user.is_authenticated %}
                                 <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>Login</a>
-                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-primary me-2"></i>Registr</a>
+                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-primary me-2"></i>Register</a>
                                 {% else %}
                                 <a class="text-body mb-3" href="{% url 'my-account' %}"><i class="fa fa-check text-primary me-2"></i>AccountManagement</a>
                                 <a class="text-body mb-3" href="{% url "pages:user-dashboard" %}"><i class="fa fa-check text-primary me-2"></i>UserDashboard</a>
@@ -304,14 +304,14 @@
                             <div class="d-flex flex-column align-items-start">
                                 <a class="text-body mb-3" href="{% url "members:member_list" %}"><i class="fa fa-check text-primary me-2"></i>Membership</a>
                                 <a class="text-body mb-3" href="{% url "members:member_list" %}"><i class="fa fa-check text-primary me-2"></i>UpdateMembership</a>
-                                <a class="text-body mb-3" href="{% url "payments:payment_menu" %}"><i class="fa fa-check text-primary me-2"></i>MembershiPayment</a>
+                                <a class="text-body mb-3" href="{% url "payments:payment_menu" %}"><i class="fa fa-check text-primary me-2"></i>MembershipPayment</a>
                                 <a class="text-body mb-3" href="#"><i class="fa fa-check text-primary me-2"></i>PaymentHistory</a>
                             </div>
                             {% else %}
                             <div class="d-flex flex-column align-items-start">
                                 <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>Membership</a>
                                 <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>UpdateMembership</a>
-                                <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>MembershiPayment</a>
+                                <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>MembershipPayment</a>
                                 <a class="text-body mb-3" href="{% url 'account_login'%}"><i class="fa fa-check text-primary me-2"></i>PaymentHistory</a>
                             </div>
                             {% endif %}
