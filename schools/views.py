@@ -13,7 +13,7 @@ class SchoolsView(TemplateView):
     
 
 #SchoolsChildrenS
-class SchoolsChildrenSchool(TemplateView):
+class SchoolsChildrenSchool(LoginRequiredMixin, View):
     template_name = 'schools/childrenSchool.html'
 
     def get(self, request):
