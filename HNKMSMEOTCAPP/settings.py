@@ -20,8 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Initialise environment variables
 
 
-# DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = True
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+#DEBUG = True
 SECRET_KEY = config('SECRET_KEY')
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -59,6 +60,7 @@ SESSION_COOKIE_SECURE= True
 # Application definition
 INSTALLED_APPS = [
     # Built-in Django apps
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',

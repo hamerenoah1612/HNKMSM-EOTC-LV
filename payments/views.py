@@ -45,7 +45,7 @@ class PaymentCaseListView(ListView, LoginRequiredMixin):
     model = PaymentCases
     template_name = 'payments/payment_case_list.html'  # Specify your template name
     context_object_name = 'payment_cases'  # Specify the context object name to use in the template
-    paginate_by = 10  # Optional: to paginate the list if there are many items
+    #paginate_by = 10  # Optional: to paginate the list if there are many items
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
