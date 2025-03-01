@@ -15,7 +15,7 @@
               <div>
                 <ol class="breadcrumb justify-content-start mb-0 animated bounceInDown small">
                     <li class="small"><a href="{% url 'pages:homepage' %}">Home <span class="px-1">\</span></a></li>
-                    <li class="small"><a href="{% url "payments:payment_menu" %}">payment_menu<span class="px-1">\</span></a></li>
+                    <li class="small"><a href="{% url 'payments:payment_menu' %}">payment_menu<span class="px-1">\</span></a></li>
                     <li class="small" aria-current="page">paymentCaseList \</li>
                 </ol>       
             </div>
@@ -36,7 +36,7 @@
     
     {% if user.is_authenticated %}
     <div class="p-2 my-1 mx-2">
-      <a href="{% url "payments:paymentCaseCart_view" %}"
+      <a href="{% url 'payments:paymentCaseCart_view' %}"
             class="btn btn-sm btn-primary px-3 py-2 rounded-pill" >
             <span id="cart_link" class="small text-white">Go to Checkout ( {{cart_count}} ) </span>
             <i class="fas fa-shopping-cart small text-white"></i>
@@ -180,7 +180,7 @@
       </div>
     </div>
   </div>
-  
-{% endif %}
+  {% endif %}
+</div>
 </div>
 {% endblock %}

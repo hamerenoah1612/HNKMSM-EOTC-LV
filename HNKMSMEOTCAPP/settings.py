@@ -13,16 +13,27 @@ import os
 from pathlib import Path
 import dj_database_url  
 from decouple import config
+from decouple import Config, RepositoryEnv
 
+
+# Initialise environment variables
+# class RailwayConfig(Config):
+#     def __init__(self, repository):
+#         super().__init__(repository)
+
+#     def __call__(self, name, default=None, cast=None):
+#         if name == 'MEDIA_ROOT' and 'RAILWAY_VOLUME_MOUNT_PATH' in os.environ:
+#             return os.environ['RAILWAY_VOLUME_MOUNT_PATH']
+#         return super().__call__(name, default, cast)
+
+# config = RailwayConfig(RepositoryEnv(".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Initialise environment variables
+#get debug value from the .env file.
+#DEBUG = config('DEBUG', default=False, cast=bool) 
 
-
-
-DEBUG = config('DEBUG', default=False, cast=bool)
-#DEBUG = True
+DEBUG = False
 SECRET_KEY = config('SECRET_KEY')
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -234,7 +245,6 @@ TIME_ZONE = 'UTC'  # or your desired timezone
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static',]
-
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
@@ -249,22 +259,24 @@ WHITENOISE_MANIFEST_STRICT = False
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+if DEBUG:
+    # Local development settings
+    MEDIA_ROOT = str(BASE_DIR / 'media')  # Convert Path to string
+else:
+    # Production settings (Railway)
+    MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join('/app/storage/media/'))
 
+print(f"MEDIA_ROOT value: {MEDIA_ROOT}")
+MEDIA_URL = '/media/'
 
-# STRIPE_SECRET_KEY = os.environ['DB_STRIPE_SECRET_KEY']
-# STRIPE_PUBLISHABLE_KEY = os.environ['DB_STRIPE_PUBLISHABLE_KEY']
-# STRIPE_WEBHOOK_SECRET = os.environ['DB_STRIPE_WEBHOOK_SECRET']
-# STRIPE_ENDPOINT_SECRET = os.environ['DB_STRIPE_ENDPOINT_SECRET']
+# Ensure the MEDIA_ROOT directory exists
+os.makedirs(MEDIA_ROOT, exist_ok=True)
 
-# STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'DB_STRIPE_SECRET_KEY')
-# STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', 'DB_STRIPE_PUBLISHABLE_KEY')
-# STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET' , 'DB_STRIPE_WEBHOOK_SECRET')
-# STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET','DB_STRIPE_ENDPOINT_SECRET')
 
 # Stripe configuration
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
