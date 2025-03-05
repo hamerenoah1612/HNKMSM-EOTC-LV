@@ -12,36 +12,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url  
+import cloudinary
 from decouple import config
-from decouple import Config, RepositoryEnv
-
-
-# Initialise environment variables
-# class RailwayConfig(Config):
-#     def __init__(self, repository):
-#         super().__init__(repository)
-
-#     def __call__(self, name, default=None, cast=None):
-#         if name == 'MEDIA_ROOT' and 'RAILWAY_VOLUME_MOUNT_PATH' in os.environ:
-#             return os.environ['RAILWAY_VOLUME_MOUNT_PATH']
-#         return super().__call__(name, default, cast)
-
-# config = RailwayConfig(RepositoryEnv(".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
-#DEBUG = config('DEBUG', default=False, cast=bool) 
 
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool) 
+#print(DEBUG)
 SECRET_KEY = config('SECRET_KEY')
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = [
     'hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
     'localhost',
     '127.0.0.1', 
 ]
+
 #CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = [
     'https://hnkmsm-eotc-lv-production.up.railway.app',  # Replace with your actual Railway app domain
@@ -80,6 +67,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'django.contrib.humanize',
     'corsheaders',
     
@@ -148,19 +137,38 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
+# Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
-#Database configuration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Change this if using another database
-        'NAME': config('DB_NAME', default='railway'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('PASSWORD'),
-        'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
-        'PORT': config('DB_PORT', default=56986),
+if DEBUG:
+    #DATABASES = { 'default' : dj_database_url.config()}
+    DATABASES = { 
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=False
+            )
+        }
+    
+else:
+    #Database configuration production 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',  # Change this if using another database
+            'NAME': config('DB_NAME', default='railway'),
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('PASSWORD'),
+            'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
+            'PORT': config('DB_PORT', default=56986),
+        }
     }
-}
 
 
 
@@ -243,39 +251,48 @@ TIME_ZONE = 'UTC'  # or your desired timezone
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static',]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-
 # STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 WHITENOISE_MANIFEST_STRICT = False
 
 
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static',]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #BASE_DIR / 'media'
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+if CLOUDINARY_URL:
+    print("Cloudinary URL found")
+else:
+    print("Cloudinary URL not found, using seperate credentials.")
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+
 if DEBUG:
     # Local development settings
-    MEDIA_ROOT = str(BASE_DIR / 'media')  # Convert Path to string
+    MEDIA_ROOT = str(BASE_DIR / 'media')
+    MEDIA_URL = '/media/'
 else:
     # Production settings (Railway)
-    MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join('/app/storage/media/'))
+    MEDIA_ROOT = None #Cloudinary handles storage.
+    MEDIA_URL = '' #Cloudinary handles URL's.
 
 print(f"MEDIA_ROOT value: {MEDIA_ROOT}")
-MEDIA_URL = '/media/'
 
-# Ensure the MEDIA_ROOT directory exists
-os.makedirs(MEDIA_ROOT, exist_ok=True)
+# Ensure the MEDIA_ROOT directory exists for local development
+if DEBUG:
+    os.makedirs(MEDIA_ROOT, exist_ok=True)
 
 
 # Stripe configuration
@@ -308,6 +325,7 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # BOTTOM OF settings.py
 
-# if os.environ.get('ENVIRONMENT') != 'production':
-#     from .local_settings import *
+if DEBUG:
+    if os.environ.get('ENVIRONMENT') != 'production':
+        from .local_settings import *
 
