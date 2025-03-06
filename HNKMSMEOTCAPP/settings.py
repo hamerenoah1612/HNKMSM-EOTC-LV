@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 import dj_database_url  
 import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
 
 DEBUG = config('DEBUG', default=False, cast=bool) 
-#print(DEBUG)
+print(DEBUG)
 SECRET_KEY = config('SECRET_KEY')
 
 ALLOWED_HOSTS = [
@@ -69,6 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
+    'django_resized',
     'django.contrib.humanize',
     'corsheaders',
     
@@ -147,18 +150,18 @@ WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 # }
 
 
+
+#DEVELOPMENT DATABASES 
 if DEBUG:
-    #DATABASES = { 'default' : dj_database_url.config()}
     DATABASES = { 
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
             conn_max_age=600,
             ssl_require=False
-            )
-        }
-    
-else:
-    #Database configuration production 
+        )
+    }
+else:    
+    # PRODUCTION Database configuration production 
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',  # Change this if using another database
@@ -166,9 +169,10 @@ else:
             'USER': config('DB_USER', default='postgres'),
             'PASSWORD': config('PASSWORD'),
             'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
-            'PORT': config('DB_PORT', default=56986),
+            'PORT': config('DB_PORT', default=56986),   
         }
     }
+    
 
 
 

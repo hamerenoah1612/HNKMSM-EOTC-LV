@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
+from django_resized import ResizedImageField
 from common.utils.text import unique_slug
 from django.utils import timezone
 from decimal import Decimal
@@ -44,7 +45,15 @@ class PaymentCases(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     instructions = models.TextField(default="If you need guidance on how to make a payment, please contact the office for assistance.")
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
-    image = models.ImageField(upload_to='payments/case_images/', blank=True, null=True)
+    image = ResizedImageField(
+        size=[490, 200],  # Resize to 300x300 pixels
+        crop=['middle', 'center'],  # Crop image
+        quality=75,  # Image quality (1-100)
+        upload_to='payments/case_images/',
+        blank=True,
+        null=True,
+        help_text='Image must be 490px by 200px.',
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     requires_delivery = models.BooleanField(default=False)  # Added for delivery tracking
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2,default=0.00)

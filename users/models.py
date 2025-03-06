@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django_resized import ResizedImageField
 from django.core.files.images import get_image_dimensions
 from django.db import models
 from django.urls import reverse
@@ -16,13 +17,21 @@ class CustomUser(AbstractUser):
     dob = models.DateField(
         verbose_name= "Date of Birth", null=True , blank=True
     )
-    avatar = models.ImageField(
+    # avatar = models.ImageField(
+    #     upload_to='avatars/', 
+    #     blank=True,
+    #     help_text='Image must be 200px by 200px.',
+    #     validators=[validate_avatar],
+    # )
+    avatar = ResizedImageField(
+        size=[200, 200],  # Resize to 300x300 pixels
+        crop=['middle', 'center'],  # Crop image
+        quality=75,  # Image quality (1-100)
         upload_to='avatars/', 
         blank=True,
         help_text='Image must be 200px by 200px.',
-        validators=[validate_avatar],
+        # validators=[validate_avatar],
     )
-    
     def get_absolute_url(self):
         return reverse('my-account')
 
