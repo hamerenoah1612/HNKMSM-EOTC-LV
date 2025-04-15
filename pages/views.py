@@ -35,7 +35,7 @@ class HomePageView(TemplateView):
         latest_gallery = Gallery.objects.order_by('-uploaded_at')[:3]
         latest_praiseGlory = PraiseGlory.objects.order_by('-created_at')[:3]
         latest_spiritualPoemSongs = SpiritualPoemSong.objects.order_by('-created_at')[:3]
-        latest_testimonySalvations = TestimonyOfSalvation.objects.order_by('-created')[:3]
+        latest_testimonySalvations = TestimonyOfSalvation.objects.order_by('-created')[:4]
         latest_userManuals = UserManual.objects.order_by('-uploaded_at')[:3]
         #payment
         # Filter for PaymentCases with the 'donation' category

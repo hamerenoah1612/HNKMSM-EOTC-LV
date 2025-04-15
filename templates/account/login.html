@@ -1,41 +1,93 @@
 {% extends '_base.html' %}
+{% load i18n %}
+{% load account socialaccount %}
+{% load socialaccount %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}Log in{% endblock %}
 {% block main %}
-<div class="hero overlay py-5 px-3" style="background-image: url('{% static "img/heroAccount-6.png" %}');" alt="Church-at">
-  <div class="card border-primary shadow mx-auto mb-5 wow bounceInUp" data-wow-delay="0.1s" style="max-width: 30rem">
-    <div class="card-header-church text-center rounded">Log in</div>
-    <div class="card-body">
-      <form method="post" class="m-auto">
-        {% csrf_token %}
-        <div id="div_id_login" class="mb-3"> 
-          <label for="id_login" class="form-label requiredField">E-mail<span class="asteriskField">*</span> </label>
-           <input type="email" name="login" placeholder="E-mail address" autocomplete="email" class="w-100 form-control p-2 mb-3 border-primary bg-light" required="" id="id_login"> </div> 
-           <div id="div_id_password" class="mb-3"> 
-            <label for="id_password" class="form-label requiredField">Password<span class="asteriskField">*</span> </label> 
-            <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="passwordinput w-100 form-control p-2 mb-3 border-primary bg-light" required="" id="id_password"> 
-            </div> 
-            <div class="mb-3"> <div id="div_id_remember" class="mb-3 form-check"> 
-              <input type="checkbox" name="remember" class="checkboxinput form-check-input" id="id_remember"> 
-              <label for="id_remember" class="form-check-label">Remember Me</label> 
-            </div> 
-          </div>
 
-        <button class="form-control btn btn-sm btn-outline-primary">Log in</button>
-      </form>
-      {% comment %} <form method="post" class="m-auto">
-        {% csrf_token %}
-        {{ form|crispy }} 
-        <button class="form-control btn btn-sm btn-outline-primary">Login</button>
-      </form> {% endcomment %}
+<div class="hero overlay py-3 px-3" style="background-image: url('{% static "img/heroAccount-6.png" %}');" alt="Church-at">
+    <div class="card border-primary shadow mx-auto mb-3 wow bounceInUp" data-wow-delay="0.1s" style="max-width: 30rem">
+        <div class="card-header-church text-center rounded fs-6"><i class="fa fa-key px-1 text-primary"></i>Login</div>
+        <div class="card-body">
+            <form method="post" class="m-auto">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Error!</strong> Please enter a correct email and password.
+                        {% if password_error %}
+                            <br>The email address exists, but the password was incorrect.
+                            <br><a href="{% url 'account_signup' %}">Need a new account? Register</a>.
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div id="div_id_login" class="mb-3 small">
+                    <label for="id_login" class="form-label requiredField">E-mail<span class="asteriskField">*</span> </label>
+                    <input type="email" name="login" placeholder="E-mail address" autocomplete="email" class="w-100 form-control p-2 mb-3 border-primary bg-light" required="" id="id_login">
+                </div>
+                <div class="mb-3 small" id="div_id_password" >
+                  <label for="id_password" class="form-label requiredField">Password<span class="asteriskField">*</span> </label>
+                  <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="passwordinput form-control border-primary bg-light" required="" id="id_password">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                      <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-3">
+                    <div id="div_id_remember" class="mb-3 form-check">
+                        <input type="checkbox" name="remember" class="checkboxinput form-check-input" id="id_remember">
+                        <label for="id_remember" class="form-check-label small">Remember Me</label>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="form-control btn btn-sm py-2 px-3 me-1 rounded-pill btn-outline-primary fs-6">Log in</button>
+                    <div class="d-flex align-items-center my-3">
+                      <div class="flex-grow-1 border-top border-secondary"></div>
+                      <span class="px-3 text-muted small">OR</span>
+                      <div class="flex-grow-1 border-top border-secondary"></div>
+                    </div>
+                    <!-- Google Sign-in Button -->
+                    <a href="{% provider_login_url 'google' %}" class="d-flex align-items-center border rounded-pill px-3 py-2 text-decoration-none text-dark w-100 hover-bg-primary border-primary  text-small" style="position: relative;">
+                      <svg class="me-3" style="width: 24px; height: 24px; position: absolute; left: 12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                      </svg>
+                      <span class="mx-auto small">Sign in with Google</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer-church rounded">
+            <p class="fs-6 d-flex  justify-content-between  bold px-2">
+                <a href="{% url 'account_signup' %}" class="small"><i class="fa fa-registered px-1"></i> New account ? Register</a>.<br>
+                <a href="{% url 'account_reset_password' %}" class="small"><i class="fa fa-user-edit px-1"></i>Reset password</a>.
+            </p>
+        </div>
+        
     </div>
-    <div class="card-footer-church rounded">
-      <p class="">
-        <a href="{% url 'account_signup' %}" class="small my-1"><i class="fa fa-registered px-1"></i> Need a new account ? Register</a>.<br>
-        <a href="{% url 'account_reset_password' %}" class="small"><i class="fa fa-user-edit  px-1"></i>Lost your password ? Reset it</a>.
-      </p>
-    </div>
-  </div>
 </div>
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('id_password');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    // Toggle the icon
+    if (type === 'text') {
+      eyeIcon.classList.remove('bi-eye');
+      eyeIcon.classList.add('bi-eye-slash');
+    } else {
+      eyeIcon.classList.remove('bi-eye-slash');
+      eyeIcon.classList.add('bi-eye');
+    }
+  });
+</script>
+
 {% endblock %}

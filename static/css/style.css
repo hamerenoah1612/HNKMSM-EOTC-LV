@@ -1,4 +1,27 @@
 
+.toast.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .toast.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .toast.warning {
+    background-color: #fff3cd;
+    color: #85640c;
+  }
+  
+  .toast.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+
+
+
+
 /*** Spinner Start ***/
 #spinner {
     opacity: 0;
@@ -722,9 +745,11 @@ banner
       @media (max-width: 767.98px) {
         .hero h1, .hero .h1 {
           font-size: 30px; } }
+    
     .hero p {
-      color: #fff; 
-    }
+        color: #f55f08; 
+        font-size: 11px;
+      }
     .hero .subheading {
       text-transform: uppercase;
       font-size: 12px;
@@ -843,3 +868,4 @@ code {
     height: 200px; /* Set your desired height */
     object-fit: cover; /* Ensures the image covers the area without distortion */
 }
+

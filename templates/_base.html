@@ -13,7 +13,7 @@
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com/">
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"> 
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;family=Playball&amp;display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
@@ -21,8 +21,9 @@
         <link href="{% static 'css/use.fontawesome.com/releases/v5.15.4/css/all.css' %}" rel="stylesheet" >
         <!-- Libraries Stylesheet -->
         {% comment %} <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet"> {% endcomment %}
+        <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">{% endcomment %}
+        {% comment %} <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet">  {% endcomment %}
+        
         <!-- Add this in your base.html in the <head> section -->  
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet">
         <!-- Customized Bootstrap Stylesheet -->
@@ -70,7 +71,7 @@
                             {% endif %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Schools</a>
-                                <div class="dropdown-menu bg-light">
+                                <div class="dropdown-menu bg-primary">
                                     {% if user.is_authenticated %}
                                     <a href="{% url "schools:school" %}" class="dropdown-item">Sunday School</a>
                                     <a href="{% url "marriage:marriageSchool_welcome" %}" class="dropdown-item">Marriage School</a>
@@ -81,9 +82,9 @@
                                 </div>
                             </div> 
                             {% if user.is_authenticated %}
-                            <div class="nav-item dropdown">
+                            <div class="nav-item dropdown sm">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Resources</a>
-                                <div class="dropdown-menu bg-light">
+                                <div class="dropdown-menu bg-primary small">
                                     <a href="{% url 'events:event_list' %}" class="dropdown-item">Events</a>
                                     <a href="{% url "multimedia:multimedia" %}" class="dropdown-item">Multimedia</a>
                                     <a href="{% url "blog:blog_list" %}" class="dropdown-item">Articles|blog</a>
@@ -110,7 +111,7 @@
                             {% if not user.is_authenticated %}
                             <a href="{% url 'account_login'%}" class="nav-item nav-link btn btn-sm btn-primary py-2 px-3 me-3 rounded-pill small">Log in</a>
                             {% else %}
-                            <div class="nav-item dropdown small">
+                            <div class="small dropdown">
                                 <a href="#" class="nav-link dropdown-toggle btn btn-sm btn-primary rounded-pill me-2" data-bs-toggle="dropdown">
                                     {% if not notification_count == 0 %}
                                     <span class="badge rounded-pill "><i class="bi bi-megaphone px-1"></i><strong class="small">{{ notification_count }}</strong></span>|
@@ -127,24 +128,24 @@
                                     {% comment %} <small>Hi{{ user.username|slice:":1"|capfirst }}</small> {% endcomment %}
                                     
                                 </a> 
-                                <div class="dropdown-menu bg-light border-2 border-primary small">
-                                    <a class="dropdown-item"><i class="fas fa-user"></i><span class="p-3 small"> {{ user.username|capfirst }}</span></a>
+                                <div class="navbar-nav-scroll dropdown-menu bg-primary border-2 border-primary small" >
+                                    <a class="dropdown-item"><i class="fas fa-user px-2"></i><span class=" small"> {{ user.username|capfirst }}</span></a>
                                     <hr class="m-0" />
-                                    <a href="{% url "pages:user-dashboard" %}" class="dropdown-item small"><i class="fas fa-clipboard"></i><span class="p-3">Dashboard</span></a>
-                                    <a href="{% url "members:member_list" %}" class="dropdown-item small"><i class="fas fa-users"></i><span class="p-3">Membership</span></a>
-                                    <a href="{% url "payments:payment_menu" %}" class="dropdown-item small"><i class="fas fa-money-check"></i><span class="p-3">Payment</span></a>
-                                    <a href="{% url 'my-account' %}" class="dropdown-item small"><i class="fas fa-user "></i><span class="p-3">my account</span></a>
+                                    <a href="{% url "pages:user-dashboard" %}" class="dropdown-item small"><i class="fas fa-clipboard px-2"></i><span class=""> Dashboard</span></a>
+                                    <a href="{% url "members:member_list" %}" class="dropdown-item small"><i class="fas fa-users px-2"></i><span class="">Membership</span></a>
+                                    <a href="{% url "payments:payment_menu" %}" class="dropdown-item small"><i class="fas fa-money-check px-2"></i><span class="">Payment</span></a>
+                                    <a href="{% url 'my-account' %}" class="dropdown-item small"><i class="fas fa-user px-2 "></i><span class="">  my account</span></a>
                                     <hr class="m-0" />
                                     {% if not notification_count == 0 %}
-                                    <a href="{% url "events:user-notification" %}" class="dropdown-item small"><i class="bi bi-megaphone"></i><span class="p-3">Notification</span></a>
+                                    <a href="{% url "events:user-notification" %}" class="dropdown-item small"><i class="bi bi-megaphone px-2"></i><span class="">Notification</span></a>
                                     {% endif %}
                                     {% if not cart_count == 0 %}
-                                    <a href="{% url "payments:paymentCaseCart_view" %}" class="dropdown-item small"><i class="fas fa-shopping-cart"></i><span class="p-3">cart</span></a>
+                                    <a href="{% url "payments:paymentCaseCart_view" %}" class="dropdown-item small"><i class="fas fa-shopping-cart px-2"></i><span class="">cart</span></a>
                                     {% endif %}
                                     <hr class="m-0" />
                                     <form action="{% url 'account_logout' %}" method="post">
                                         {% csrf_token %}
-                                        <button class="btn btn-primary dropdown-item small"><i class="fas fa-sign-out-alt"></i><span class="p-3">Logout</span></button>
+                                        <button class="btn btn-primary dropdown-item small"><i class="fas fa-sign-out-alt px-2"></i><span class="">Logout</span></button>
                                     </form>
                                 </div>
                             </div>
@@ -157,7 +158,40 @@
             </div>
         </div>
         <!-- Navbar End -->
-        
+        <!-- Django message toast -->
+        {% if messages %}
+        <div class="toast-container position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+          {% for message in messages %}
+            <div id="toast-{{ forloop.counter }}" class="toast align-items-center {{ message.tags }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+              <div class="d-flex">
+                <div class="toast-body">
+                  {{ message }}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toastEl = document.getElementById('toast-{{ forloop.counter }}');
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                  });
+            </script>
+          {% endfor %}
+
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+                toastElList.forEach(toastEl => {
+                    toastEl.addEventListener('hidden.bs.toast', () => {
+                        // Do something... (optional)
+                    });
+                });
+            });
+        </script>
+        </div>
+        {% endif %}
+        <!-- end Django message toast -->
         <!-- Modal Search Start -->
         <div class="modal fade " id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md">
@@ -402,7 +436,6 @@
 
         <!-- Template Javascript -->
         <script type="text/javascript" src="{% static 'js/main.js' %}" async></script>
-
     </body>
 
 

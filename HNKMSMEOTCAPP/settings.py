@@ -20,7 +20,7 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
-
+#DEBUG = True
 DEBUG = config('DEBUG', default=False, cast=bool) 
 print(DEBUG)
 SECRET_KEY = config('SECRET_KEY')
@@ -67,21 +67,21 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
     'django.contrib.staticfiles',
-    'cloudinary_storage',
-    'cloudinary',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'crispy_forms',
     'django_resized',
     'django.contrib.humanize',
     'corsheaders',
     
-    
     # Third-party
-    'crispy_forms',
     'crispy_bootstrap5',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    'cloudinary_storage',
+    'cloudinary',
     
 
     
@@ -102,6 +102,33 @@ INSTALLED_APPS = [
     
 ]
 SITE_ID = 1
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         "SCOPE": [
+#             "profile",
+#             "email",
+#         ],
+#         "AUTH_PARAMS": {"access_type": "online"}
+#     }
+# }
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": config('CLIENT_ID'),#"your-google-client-id.apps.googleusercontent.com",
+            "secret": config('CLIENT_SECRET'), #"your-google-client-secret",
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET=True
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -117,6 +144,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 ROOT_URLCONF = 'HNKMSMEOTCAPP.urls'
@@ -124,7 +153,7 @@ ROOT_URLCONF = 'HNKMSMEOTCAPP.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-          'DIRS': [BASE_DIR/ 'templates'],
+        'DIRS': [BASE_DIR/ 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -174,8 +203,6 @@ else:
     }
     
 
-
-
 AUTHENTICATION_BACKENDS = (
 # Needed to login by username in Django admin, even w/o `allauth`
 'django.contrib.auth.backends.ModelBackend',
@@ -201,12 +228,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+ACCOUNT_FORMS = {
+    'login': 'users.forms.CustomLoginForm', #replace your_app_name
+}
+# ACCOUNT_FORMS = {
+#     'confirm_email': 'users.forms.CustomConfirmEmailForm', # If you decide to customize the confirmation form later
+#     'login': 'users.forms.CustomLoginForm', # If you implemented the custom login form
+# }
 # AUTHENTICATION SETTINGS
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = 'pages:homepage'
-
+# LOGOUT_REDIRECT_URL = 'account_login'
 ## django-allauth settings
 ACCOUNT_AUTHENTICATION_METHOD = 'email' # Default: 'username'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1 # Default: 3
@@ -216,30 +249,42 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5 # Default: 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300 # Default 300
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login' # Default: '/'
 ACCOUNT_USERNAME_REQUIRED = False # Default: True
-
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET= True
+ACCOUNT_UNIQUE_EMAIL = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_UNIQUE_EMAIL = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
 #create a custom SignupForm class
 ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SignupForm'
 
 # AUTHENTICATION SETTINGS
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@gmail.com'  # Your Gmail account
-# EMAIL_HOST_PASSWORD = 'your-app-password'  # App password or account password
-# DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
 
-# Email configuration
-SENDGRID_API_KEY = config('SENDGRID_API_KEY') 
+#EmailBackend GMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net' ) # default='smtp.gmail.com
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'temf2006@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your Gmail account
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # App password or account password
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='hamerenoah.it@gmail.com')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+#from common.utils.email import send_email
+# Email configuration
+# SENDGRID_API_KEY = config('SENDGRID_API_KEY') 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net' ) # default='smtp.gmail.com
+# EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='temf2006@gmail.com') 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -256,7 +301,7 @@ TIME_ZONE = 'UTC'  # or your desired timezone
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 # STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage" #"whitenoise.storage.CompressedManifestStaticFilesStorage"
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 WHITENOISE_MANIFEST_STRICT = False
 

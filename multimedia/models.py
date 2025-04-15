@@ -111,7 +111,8 @@ class TestimonyOfSalvation(models.Model):
     title = models.CharField(max_length=200)
     testimony = models.TextField(max_length=1000,null=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    link = models.URLField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True,help_text='A video that come from YouTube')
+    testimony_image = models.ImageField(upload_to='testimony/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=200, unique=True ,null=True, blank=True)  # Add this line

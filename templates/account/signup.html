@@ -1,22 +1,125 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
 {% load static %}
 {% block title %}Register{% endblock %}
-
 {% block main %}
 <div class="hero overlay py-2 px-3" style="background-image: url('{% static "img/heroAccount-6.png" %}');" alt="Church-at">
-  <div class="card border-primary shadow mx-auto mb-3 wow bounceInUp" style="max-width: 30rem">
+  <div class="card border-primary shadow mx-auto mb-3 wow bounceInUp" style="max-width: 40rem">
     <div class="card-header-church text-center rounded">Register</div>
     <div class="card-body">
-      <form method="post" class="m-auto mb-2">
+      {% comment %} <form method="post" class="m-auto mb-2 small">
         {% csrf_token %}
         {{ form|crispy }} 
         <button class="form-control btn btn-sm btn-outline-primary">REGISTER</button>
+      </form>   {% endcomment %}
+      
+      <form method="post" class="m-auto mb-2 small">
+        {% csrf_token %}
+        <div id="div_id_email" class="mb-3"> 
+            <label for="id_email" class="form-label requiredField">E-mail<span class="asteriskField">*</span> </label> 
+            <input type="email" name="email" placeholder="E-mail address" autocomplete="email" class="textinput form-control form-sm-control border-primary bg-light text-small" required="" id="id_email"> 
+            <div class="small text-danger">{{ form.email.errors }}</div>
+        </div> 
+        <div class="pb-3">
+            <div class="row ">
+                <div class="col-sm-6">
+                    <div id="div_id_first_name" class="mb-3"> 
+                        <label for="id_first_name" class="form-label">First name</label> 
+                        <input type="text" name="first_name" class="w-100 form-control form-sm-control border-primary bg-light text-small textinput" placeholder="First Name" maxlength="150" id="id_first_name"> 
+                        <div class="small text-danger">{{ form.first_name.errors }}</div>
+                    </div> 
+                </div>
+                <div class="col-sm-6">
+                    <div id="div_id_last_name" class="mb-3"> 
+                        <label for="id_last_name" class="form-label">Last name</label> 
+                        <input type="text" name="last_name" class="w-100 form-control form-sm-control border-primary bg-light text-small textinput" placeholder="Last Name" maxlength="150" id="id_last_name"> 
+                        <div class="small text-danger">{{ form.last_name.errors }}</div>
+                    </div> 
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-6">
+                    <div id="div_id_password1" class="mb-3"> 
+                        <label for="id_password1" class="form-label requiredField">Password<span class="asteriskField">*</span> </label> 
+                        <div class="input-group">
+                            <input type="password" name="password1" placeholder="Password" autocomplete="new-password" class="passwordinput form-control form-sm-control border-primary bg-light text-small" required="" id="id_password1" aria-autocomplete="list"> 
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword_sign"><i class="bi bi-eye" id="eyeIcon_sign1"></i></button>
+                        </div>
+                        <div class="small text-danger">{{ form.password1.errors }}</div>
+                    </div> 
+                </div>
+                <div class="col-sm-6">
+                    <div id="div_id_password2" class="mb-3"> 
+                        <label for="id_password2" class="form-label requiredField">Confirm Password<span class="asteriskField">*</span> </label> 
+                        <div class="input-group">
+                            <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" class="passwordinput form-control form-sm-control border-primary bg-light text-small" required="" id="id_password2"> 
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2_sign"><i class="bi bi-eye " id="eyeIcon_sign2"></i></button>
+                        </div>
+                        <div class="small text-danger">{{ form.password2.errors }}</div>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+          <button class="form-control btn btn-sm btn-outline-primary">REGISTER</button>
       </form>
+      <div class="text-center">
+        <div class="d-flex align-items-center my-3">
+          <div class="flex-grow-1 border-top border-secondary"></div>
+          <span class="px-3 text-muted small">OR</span>
+          <div class="flex-grow-1 border-top border-secondary"></div>
+        </div>
+        <a href="{% provider_login_url 'google' %}" class="d-flex align-items-center border rounded-pill px-3 py-2 text-decoration-none text-dark w-100 hover-bg-primary border-primary bg-light text-small" style="position: relative;">
+          <svg class="me-3" style="width: 24px; height: 24px; position: absolute; left: 12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+          </svg>
+          <span class="mx-auto small">SignUp with Google</span>
+        </a>
+      </div>
     </div>
-    <div class="card-footer-church rounded">
+    <div class="card-footer-church rounded text-center small">
       Already have an account? <a href="{% url 'account_login' %}">Log in</a>
     </div>
   </div>
 </div>
+<script>
+  const togglePassword = document.getElementById('togglePassword_sign');
+  const togglePassword2 = document.getElementById('togglePassword2_sign');
+  const passwordInput = document.getElementById('id_password1');
+  const passwordInput2 = document.getElementById('id_password2');
+  const eyeIcon1 = document.getElementById('eyeIcon_sign1');
+  const eyeIcon2= document.getElementById('eyeIcon_sign2');
+
+  togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    // Toggle the icon
+    if (type === 'text') {
+      eyeIcon1.classList.remove('bi-eye');
+      eyeIcon1.classList.add('bi-eye-slash');
+      
+    } else {
+      eyeIcon1.classList.remove('bi-eye-slash');
+      eyeIcon1.classList.add('bi-eye');
+      
+    }
+  });
+
+  togglePassword2.addEventListener('click', function () {
+    const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput2.setAttribute('type', type);
+    // Toggle the icon
+    if (type === 'text') {
+      eyeIcon2.classList.remove('bi-eye');
+      eyeIcon2.classList.add('bi-eye-slash');
+    } else {
+      eyeIcon2.classList.remove('bi-eye-slash');
+      eyeIcon2.classList.add('bi-eye');
+    }
+  });
+</script>
 {% endblock %}
