@@ -21,7 +21,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
 #DEBUG = True
-DEBUG = config('DEBUG', default=False, cast=bool) 
+#DEBUG = config('DEBUG', default=False, cast=bool) 
+DEBUG = os.environ.get('DEBUG', 'False') == 'True' # Ensure DEBUG is boolean
 print(DEBUG)
 SECRET_KEY = config('SECRET_KEY')
 
@@ -180,28 +181,52 @@ WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 
 
 
-#DEVELOPMENT DATABASES 
+# #DEVELOPMENT DATABASES 
+# if DEBUG:
+#     DATABASES = { 
+#         'default': dj_database_url.config(
+#             default=os.environ.get('DATABASE_URL'),
+#             conn_max_age=600,
+#             ssl_require=False
+#         )
+#     }
+# else:    
+#     # PRODUCTION Database configuration production 
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',  
+#             'NAME': config('DB_NAME', default='railway'),
+#             'USER': config('DB_USER', default='postgres'),
+#             'PASSWORD': config('PASSWORD'),
+#             'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
+#             'PORT': config('DB_PORT', default=56986),   
+#         }
+#     }
+
+
 if DEBUG:
-    DATABASES = { 
+    # Development database (using DATABASE_URL or fallback to sqlite)
+    DATABASES = {
         'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
+            default='sqlite:///db.sqlite3',  # Fallback for local dev
             conn_max_age=600,
             ssl_require=False
         )
     }
-else:    
-    # PRODUCTION Database configuration production 
+else:
+    # Production database (using DATABASE_URL)
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',  # Change this if using another database
-            'NAME': config('DB_NAME', default='railway'),
-            'USER': config('DB_USER', default='postgres'),
-            'PASSWORD': config('PASSWORD'),
-            'HOST': config('DB_HOST', default='autorack.proxy.rlwy.net'),
-            'PORT': config('DB_PORT', default=56986),   
-        }
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True,
+        )
+        
     }
- 
+
+    # Ensure DATABASE_URL is set in production
+    if not os.environ.get('DATABASE_URL'):
+        raise Exception("DATABASE_URL environment variable is not set in production.") 
 
 AUTHENTICATION_BACKENDS = (
 # Needed to login by username in Django admin, even w/o `allauth`
