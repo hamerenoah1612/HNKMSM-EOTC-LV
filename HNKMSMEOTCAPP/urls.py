@@ -13,8 +13,8 @@ urlpatterns = [
     
     # User Management
     path('account/', include('users.urls')),
-    # path('account/confirm-email/<str:key>/', custom_confirm_email, name='account_confirm_email'),
     path('account/', include('allauth.urls')),
+    
     
     path('', include('pages.urls')),
     path('projectVote/', include('projectVote.urls')),

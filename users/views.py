@@ -32,27 +32,3 @@ class MyAccountPageView(SuccessMessageMixin,LoginRequiredMixin, UpdateView):
     
 
 
-# def custom_confirm_email(request, key):
-#     try:
-#         email_address = EmailAddress.objects.get(key=key)
-#         if email_address.user.emailaddress_set.filter(verified=True, email=email_address.email).exists():
-#             messages.error(request, "This email address has already been verified and is associated with another account.")
-#             return redirect(reverse('account_login'))
-#         email_address.verified = True
-#         email_address.save()
-#         email_confirmed.send(sender=email_address, request=request)
-#         messages.success(request, "Your email address has been successfully verified.")
-#         return redirect('account_login')
-#     except EmailAddress.DoesNotExist:
-#         messages.error(request, "This email confirmation link is invalid or has expired.")
-#         return redirect(reverse('account_signup'))
-#     except IntegrityError:
-#         messages.error(request, "An unexpected error occurred: This email address is already associated with a verified account.")
-#         return redirect(reverse('account_login'))
-#     except FieldError as e:  # Catch the specific FieldError
-#         messages.error(request, f"An internal error occurred: {e}")
-#         return redirect(reverse('account_signup'))
-#     except Exception as e:
-#         messages.error(request, f"An unexpected error occurred: {e}")
-#         return redirect(reverse('account_signup'))
-
