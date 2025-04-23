@@ -20,7 +20,7 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
-#DEBUG = True
+#DEBUG = False
 DEBUG = config('DEBUG', default=False, cast=bool) 
 #DEBUG = os.environ.get('DEBUG', 'False') == 'True' # Ensure DEBUG is boolean
 print(DEBUG)
@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'admin_honeypot',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -253,7 +254,7 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SignupForm'
 
 # AUTHENTICATION SETTINGS
 AUTH_USER_MODEL = 'users.CustomUser'
-
+ACCOUNT_USERNAME_BLACKLIST = ['admin','account','theSupperAdmin']
 
 #EmailBackend GMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

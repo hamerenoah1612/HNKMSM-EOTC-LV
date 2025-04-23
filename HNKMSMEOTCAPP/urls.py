@@ -9,7 +9,9 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
     # Admin
     path('admin/doc/', include('django.contrib.admindocs.urls')),
-    path('admin/', admin.site.urls),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('theSupperAdmin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     
     # User Management
     path('account/', include('users.urls')),
