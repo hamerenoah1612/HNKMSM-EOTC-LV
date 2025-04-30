@@ -29,19 +29,26 @@
     </div>
     <!-- Rendering detail title -->
     <div class="container mt-1 p-3">
-        <h3 class="text-primary fs-4">{{course_detail.title}}</h3>
+        <h3 class="text-primary fs-4">{{course_detail.title|safe }}</h3>
         <hr>
-        <p class="small lh-lg">{{course_detail.description}}</p>
+        <p class="small lh-lg">{{course_detail.description|safe }}</p>
         <hr>
     </div>
-   
+   {% if course_content %}
+   <div class="container mt-1 p-3">
+    <h3 class="text-primary fs-4">{{course_content.title|safe }}</h3>
+    <hr>
+    <p class="small lh-lg">{{course_content.description|safe }}</p>
+    <hr>
+   </div>
+   {% endif %}
     <!-- Rendering Subtitles -->
     <div class="container mt-1 p-3">
         <ul>
             {% for subtitle in course_detail.subtitles.all %}
                 <li>
-                    <h3 class="text-primary fs-5">{{ subtitle.subtitle }}</h3>
-                    <p class="small lh-lg">{{ subtitle.description }}</p>
+                    <h3 class="text-primary fs-5">{{ subtitle.subtitle|safe }}</h3>
+                    <p class="small lh-lg">{{ subtitle.description|safe  }}</p>
                 </li>
                 <hr>
             {% endfor %}
@@ -68,7 +75,7 @@
                             <h3 class="card-title fs-5">{{ resource.title }}</h3>
                             <small>{{resource.category }}</small>
                             <hr>
-                            <p class="card-text small lh-lg">{{ resource.description|truncatewords:10 }}</p>
+                            <p class="card-text small lh-lg">{{ resource.description|truncatewords:10|safe }}</p>
                             <a href="{% url 'marriage:resource_detail' resource.slug %}" class="btn btn-sm btn-primary">Start</a>
                             </div>
                         </div>
@@ -115,8 +122,31 @@
                             </div>
                             {% endif %}
                         {% endfor %}
-                        <button type="submit" class="btn btn-primary">Submit Quiz</button>
+                        {% if is_quizzes_taken %}
+                            {% for results in result %}
+                                {% if results.user.id == user.id %}
+                                    {% if results.is_pass %}
+                                    <div class="">
+                                    <a  href="{% url 'marriage:course_list' %}" class="btn btn-sm btn-primary py-2 px-3 me-3 rounded-pill small">Your Score: {{results.score|floatformat:0}}, Continue to Next Chapter</a>
+                                    {% if results.score <= 80.00%}
+                                    <span class="px-3">-OR-</span>   
+                                    <button type="submit" class="btn btn-sm btn-primary py-2 px-3 me-3 rounded-pill small">you pass but you can Retake and ReSubmit</button>
+                                    </div>
+                                    {% else %}
+                                    {% endif %}
+                                    {% else %}
+                                    <button type="submit" class="btn btn-sm btn-primary py-2 px-3 me-3 rounded-pill small">Your Score: {{results.score|floatformat:0}} is lass than 80% so,Retake and ReSubmit the Quiz!</button>
+                                    {% endif %}
+                                {% else %}
+                                {% comment %} {{results.is_pass}} {{results.user}} {% endcomment %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <button type="submit" class="btn btn-sm btn-primary py-2 px-3 me-3 rounded-pill small">Submit Quiz</button>
+                        {% endif %}
                     </form>
+                   
+                            
                 </div>
             </div>
             {% endfor %}
@@ -150,6 +180,7 @@
                         
                         <button name="questions_and_answers" type="submit" class="btn btn-sm  btn-primary">submit</button>                           
                     </form>
+                    
                 </div>
             </div>
            
@@ -228,3 +259,6 @@
     
 </div>
 {% endblock %}
+
+
+

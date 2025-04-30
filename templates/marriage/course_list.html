@@ -24,7 +24,7 @@
             </div>
             <!-- breadcrumb Start -->
             <div class="text-center py-1">
-                <h6 class="mb-2 bolder text-light fs-6">ወደ ጋብቻ ትምህርት ቤት እንኳን ደህና መጡ</h6>
+                <h6 class="mb-2 bolder text-light fs-6">ወደ ጋብቻ ትምህርት ቤት ክፍል እንኳን ደህና መጡ</h6>
                 <h1 class="mb-2 text-light fs-4">welcome to  marriage School</h1>
                 <p class="mx-1 small">Premarital and Potmarital counseling can matter significantly for couples as it helps build a strong foundation for marriage.</p>
                 <p class="mx-1 small">ከጋብቻ በፊት እና ከጋብቻ በኋላ የሚደረግ ምክር ለትዳር ጠንካራ መሰረትን ለመገንባት ስለሚረዳ ጥንዶች ጠቃሚ ሊሆኑ ይችላሉ።</p>
@@ -93,38 +93,72 @@
                     <p class="mx-3 small">Pre-Marital Courses from an Ethiopian Orthodox Tewahedo Perspective*ከጋብቻ በፊት የሚሰጠው ትምህርቶች ከኢትዮጵያ ኦርቶዶክስ ተዋሕዶ አንጻር</p>
                     <p class="mx-3 pb-2 small"><strong>Instructions:</strong> Review the course content and supporting resources, then complete the quiz for the courses listed below.Good luck! </p>
                     <hr class="text-primary">
+                    
                     <div class="row row-cols-1 row-cols-md-3 my-2 pb-3 g-4">
-                            {% for course in courses %}
-                                {% if course.category == 'PreMarital' %}
-                                    <div class="col">
+                        {% for course in courses %}
+                            {% if course.category == 'PreMarital' %}
+                                <div class="col">
                                     <div class="card shadow">
-                                        <img src="{% static 'img/Courses-palceHlder.png' %}" class="card-img-top rounded-4" alt="{{ course.title }}">
+                                        <img src="{% static 'img/Courses-palceHlder.png' %}" class="card-img-top" alt="{{ course.title }}">
                                         <div class="card-body">
-                                        <h3 class="card-title fs-6">{{ course.title|truncatewords:5 }}</h3>
-                                        <!--Completion Status-->
-                                        {% with result=results|get_item:course %}
-                                            {% if result %}
-                                            <small>Status: 
-                                                <span class="text-success">successfuly Completion</span>
-                                                <p  class="text-primary"><strong>Your Result:</strong> {{ result.score|floatformat:0  }} %</p>
-                                            </small>
-                                            {% else %}
-                                            <small>Status:
-                                                <span class="text-danger">Incomplete</span>
-                                                <p><strong>Your Result:</strong> Not available</p>
-                                            </small>
-                                            {% endif %}
-                                        {% endwith %}
-                                        <hr>
-                                        <p class="card-text small">{{ course.description|truncatewords:10 }}</p>
-                                        <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
+                                            <h3 class="card-title fs-5">{{ course.title|truncatewords:5 }}</h3>
+                                            
+                                            <!-- Progress Status -->
+                                            {% for progressing in progress %}
+                                                {% if progressing.course == course and progressing.user.id == user.id %}
+                                                    <div class="progress-status mb-2">
+                                                        {% if progressing.is_complete_courses_Chapter_detail and progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 100%">
+                                                                    <p class="text-success mb-0">100% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% elif progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 50%">
+                                                                    <p class="text-success mb-0">50% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% elif not progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 0%">
+                                                                    <p class="text-success mb-0">0% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                            <!-- Completion Status -->
+                                            {% with result=results|get_item:course %}
+                                                {% if result %}
+                                                    <small class="text-primary text-bold">Status:</small>
+                                                    <ul class="list-unstyled small">
+                                                        <li class="text-success small"><strong>Successfully Completion</strong></li> 
+                                                        <li class="text-success small"><strong>Completion Date:</strong> {{ result.updated_at }}</li>
+                                                        <li class="text-success small"><strong>Result: {% if result.is_pass %}pass {% else %}re-take the test{% endif %}</strong></li> 
+                                                        <li class="text-success small"><strong>Your score:</strong> {{ result.score|floatformat:0 }} %</li>
+                                                    </ul>
+                                                {% else %}
+                                                    <small>Status:
+                                                        <span class="text-danger small">Incomplete</span>
+                                                        <p class="small"><strong>Your Result:</strong> Not available</p>
+                                                    </small>
+                                                {% endif %}
+                                            {% endwith %}
+                                            <hr>
+                                            <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
                                         </div>
                                     </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-
                 </div>
             </div>
             <!-- Resources Section -->
@@ -173,32 +207,65 @@
                     <div class="row row-cols-1 row-cols-md-3 my-3 pb-3 g-4">
                             {% for course in courses %}
                                 {% if course.category == 'PostMarital' %}
-                                    <div class="col">
+                                <div class="col">
                                     <div class="card shadow">
                                         <img src="{% static 'img/Courses-palceHlder.png' %}" class="card-img-top" alt="{{ course.title }}">
                                         <div class="card-body">
-                                        <h3 class="card-title fs-6">{{ course.title|truncatewords:6  }}</h3>
-                                        
-                                        <!--Completion Status-->
-                                        {% with result=results|get_item:course %}
-                                            {% if result %}
-                                            <small>Status: 
-                                                <span class="text-success">successfuly Completion</span>
-                                                <p  class="text-primary small"><strong>Your Result:</strong> {{ result.score|floatformat:0  }} %</p>
-                                            </small>
-                                            {% else %}
-                                            <small>Status:
-                                                <span class="text-danger">Incomplete</span>
-                                                <p><strong>Your Result:</strong> Not available</p>
-                                            </small>
-                                            {% endif %}
-                                        {% endwith %}
-                                        <hr>
-                                        <p class="card-text small">{{ course.description|truncatewords:10 }}</p>
-                                        <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
+                                            <h3 class="card-title fs-5">{{ course.title|truncatewords:5 }}</h3>
+                                            
+                                            <!-- Progress Status -->
+                                            {% for progressing in progress %}
+                                                {% if progressing.course == course and progressing.user.id == user.id %}
+                                                    <div class="progress-status mb-2">
+                                                        {% if progressing.is_complete_courses_Chapter_detail and progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 100%">
+                                                                    <p class="text-success mb-0">100% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% elif progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 50%">
+                                                                    <p class="text-success mb-0">50% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% elif not progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
+                                                            
+                                                            <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar text-bg-primary" style="width: 0%">
+                                                                    <p class="text-success mb-0">0% Completed</p>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                            <!-- Completion Status -->
+                                            {% with result=results|get_item:course %}
+                                                {% if result %}
+                                                    <small class="text-primary text-bold">Status:</small>
+                                                    <ul class="list-unstyled small">
+                                                        <li class="text-success small"><strong>Successfully Completion</strong></li> 
+                                                        <li class="text-success small"><strong>Completion Date:</strong> {{ result.updated_at }}</li>
+                                                        <li class="text-success small"><strong>Result: {% if result.is_pass %}pass {% else %}re-take the test{% endif %}</strong></li> 
+                                                        <li class="text-success small"><strong>Your score:</strong> {{ result.score|floatformat:0 }} %</li>
+                                                    </ul>
+                                                {% else %}
+                                                    <small>Status:
+                                                        <span class="text-danger small">Incomplete</span>
+                                                        <p class="small"><strong>Your Result:</strong> Not available</p>
+                                                    </small>
+                                                {% endif %}
+                                            {% endwith %}
+                                            <hr>
+                                            <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
                                         </div>
                                     </div>
-                                    </div>
+                                </div>
                                 {% endif %}
                             {% endfor %}
                     </div>

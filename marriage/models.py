@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 
 
@@ -44,6 +45,7 @@ class SchoolProgressController(models.Model):
     def __str__(self):
         return f'{self.user} - Progress'
 
+
 # Course and Quiz Models
 class Course(models.Model):
     CATEGORY=( 
@@ -52,7 +54,8 @@ class Course(models.Model):
      )
     title = models.CharField(max_length=200)
     category =models.CharField(max_length=50, choices=CATEGORY)
-    description = models.TextField()
+    #description = models.TextField()
+    description = RichTextField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)
     slug = models.SlugField(max_length=200, unique=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -65,6 +68,25 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+# Course Progress Control for Users
+class CourseChapterProgressController(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_complete_courses_Chapter_detail = models.BooleanField(default=False)
+    is_courses_Chapter_quiz_pass = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(max_length=200, unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slug(self.user, type(self))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.user} - CourseChapterProgress'
+
 
 # Subtitle Model
 class Subtitle(models.Model):

@@ -20,8 +20,8 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 #get debug value from the .env file.
-#DEBUG = False
-DEBUG = config('DEBUG', default=False, cast=bool) 
+DEBUG = False
+#DEBUG = config('DEBUG', default=False, cast=bool) 
 #DEBUG = os.environ.get('DEBUG', 'False') == 'True' # Ensure DEBUG is boolean
 print(DEBUG)
 SECRET_KEY = config('SECRET_KEY')
@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'django_resized',
     'django.contrib.humanize',
     'corsheaders',
+    'ckeditor',
     
     # Third-party
     'crispy_bootstrap5',

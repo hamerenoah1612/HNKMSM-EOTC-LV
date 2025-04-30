@@ -11,6 +11,7 @@ from .models import (Course, Quiz, Question,
                      Certification,MeetEvents,
                      marriageQuationsAndAnswer,
                      SignupForSchool,
+                     CourseChapterProgressController,
                      SignupForMeetEvents
                 )
 from .forms import SignupForSchoolForm,marriageSchoolQuationsAndAnswerForm
@@ -106,10 +107,10 @@ class CourseListView(LoginRequiredMixin, ListView):
         user = self.request.user
        
         # Create a dictionary of course: result pairs
-        context['results'] = {course: Results.objects.filter(user=user, course=course).first() for course in context['courses']}
-        
+        context['results'] = {course: Results.objects.filter(user=user, course=course).first() for course in context['courses']} 
         context['resources_pre'] = Resources.objects.filter(category = 'PreMarital')
         context['resources_post'] = Resources.objects.filter(category = 'PostMarital')
+        context['progress'] = CourseChapterProgressController.objects.filter(user=user)
         return context
     
 class CourseDetailView(LoginRequiredMixin, DetailView): 
@@ -119,17 +120,57 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     
     
     def get_context_data(self, **kwargs):
+        
         context = super().get_context_data(**kwargs)
         course = self.get_object()  # Get the current course object
-        context['quizzes'] = Quiz.objects.filter(course=course)
-        context['questions'] = Question.objects.filter(course=course)
-        context['answers'] = Answer.objects.filter(question__course=course)
-        context['resources'] = Resources.objects.all()
-        # Filter quationsAndAnswer by the current course
-        context['quationsAnswerData'] = marriageQuationsAndAnswer.objects.filter(course=course).order_by('created')
+        if course.is_completed == True:
+            context['quizzes'] = Quiz.objects.filter(course=course)
+            context['questions'] = Question.objects.filter(course=course)
+            context['answers'] = Answer.objects.filter(question__course=course)
+            context['resources'] = Resources.objects.all()
+            context['result'] = Results.objects.filter(user=self.request.user, course=course).order_by('-updated_at')
+            context['is_quizzes_taken'] = Results.objects.filter(user=self.request.user, course=course).exists()
+            # Filter quationsAndAnswer by the current course
+            context['quationsAnswerData'] = marriageQuationsAndAnswer.objects.filter(course=course).order_by('created')
+            context['progress'] = UpdateCourseChapterDetailClicked(course,user=self.request.user, is_Chapter =True, is_quiz = False)
+        else: 
+            context['course_content'] = course
         return context
     
-    
+def UpdateCourseChapterDetailClicked(course, user, is_Chapter , is_quiz ):
+    # Get or create the progress record for this user and course
+    if is_Chapter == True:
+        progress, created = CourseChapterProgressController.objects.get_or_create(
+            user=user,
+            course=course,
+            defaults={
+                'is_complete_courses_Chapter_detail': True,
+                'slug': None  # The save() method will handle the slug
+            }
+        )
+        
+        # If the record already existed, update it
+        if not created:
+            progress.is_complete_courses_Chapter_detail = True
+            progress.save()
+            
+    if is_quiz :
+        progress, created = CourseChapterProgressController.objects.get_or_create(
+            user=user,
+            course=course,
+            defaults={
+                'is_courses_Chapter_quiz_pass': True,
+                'slug': None  # The save() method will handle the slug
+            }
+        )
+        
+        # If the record already existed, update it
+        if not created:
+            progress.is_courses_Chapter_quiz_pass = True
+            progress.save()
+            
+    return progress
+       
 class ResourceDetailView(LoginRequiredMixin, DetailView):
     model = Resources
     template_name = 'marriage/resources_detail.html'  # Specify your detail view template
@@ -164,8 +205,7 @@ class marriageSchoolQA(LoginRequiredMixin, View):
                 'quationsAnAnswerForm': marriageSchoolQuationsAndAnswerForm()
                 }
             return render(request, self.template_name, context)
-        
-    
+         
 class QuationsAndAnswer_confirmation(TemplateView, LoginRequiredMixin):
     template_name = 'marriage/quationsAndAnswer_confirmation.html'
     
@@ -178,7 +218,6 @@ class MeetEventListView(ListView):
     def get_queryset(self):
         # Filter to show only active events
         return MeetEvents.objects.filter(status='active').order_by('-date_and_time')
-
 
 class MeetEventDetailView(DetailView):
     model = MeetEvents
@@ -238,7 +277,7 @@ def submit_quiz(request, quiz_id):
         result, created = Results.objects.get_or_create(user=request.user, quiz=quiz, course=course)
         result.score = score
         result.save()
-
+        if created:
+            UpdateCourseChapterDetailClicked(course,user=request.user, is_Chapter=False, is_quiz=True)
         return redirect('marriage:course_detail', slug=course.slug)
-
     return render(request, 'marriage/course_detail.html', {'course_detail': course})
