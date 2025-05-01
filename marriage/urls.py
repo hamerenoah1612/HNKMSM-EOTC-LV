@@ -3,7 +3,10 @@ from .views import (marriageSchoolWelcome,CourseListView,
                     CourseDetailView,ResultsListView, 
                     ResourceDetailView , submit_quiz, 
                     marriageSchoolQA,QuationsAndAnswer_confirmation,
-                    MeetEventListView,MeetEventDetailView,signup_for_event)
+                    MeetEventListView,MeetEventDetailView,
+                    signup_for_event,
+                    canceled_for_event
+                    )
 
 app_name = 'marriage' 
 
@@ -20,4 +23,5 @@ urlpatterns = [
     path('meet_events/', MeetEventListView.as_view(), name='meet_event_list'),
     path('meet_events/<slug:slug>/', MeetEventDetailView.as_view(), name='meet_event_detail'),
     path('meet_events/<slug:slug>/signup/', signup_for_event, name='signup_for_event'),
+    path('meet_events/<slug:slug>/canceled/', canceled_for_event, name='canceled_for_event')
 ]

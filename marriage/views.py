@@ -228,19 +228,37 @@ class MeetEventDetailView(DetailView):
     template_name = 'marriage/meet_event_detail.html'  # Specify the template to use
     context_object_name = 'meet_event'
 
-# @login_required
-# def signup_for_event(request, event_slug):
-#     meet_event = get_object_or_404(MeetEvents, slug=event_slug)
+@login_required
+def canceled_for_event(request, event_slug):
+    meet_event = get_object_or_404(MeetEvents, slug=event_slug)
+    print(meet_event)
+    try:
+        # Get the signup record if it exists
+        signup = SignupForMeetEvents.objects.filter(
+            meet_events=meet_event,
+            user=request.user
+        ).first()
+        
+        if signup:
+            signup.delete()
+            messages.success(
+                request,
+                "Your registration has been cancelled. "
+                "You can sign up again if you change your mind."
+            )
+        else:
+            messages.info(
+                request,
+                "You weren't registered for this event."
+            )
+            
+    except Exception as e:
+        messages.error(
+            request,
+            f"Error cancelling registration: {str(e)}"
+        )
     
-#     # Check if the user has already signed up for the event
-#     if SignupForMeetEvents.objects.filter(meet_events=meet_event, user=request.user).exists():
-#         messages.warning(request, "You have already signed up for this event.")
-#     else:
-#         signup = SignupForMeetEvents(meet_events=meet_event, user=request.user)
-#         signup.save()
-#         messages.success(request, "You have successfully signed up for the event.")
-    
-#     return redirect('marriage:meet_event_detail', event_slug=event_slug)
+    return redirect('marriage:meet_event_detail', event_slug=event_slug)
 
 @login_required
 def signup_for_event(request, slug):
