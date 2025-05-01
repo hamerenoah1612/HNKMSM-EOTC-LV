@@ -173,7 +173,7 @@ WSGI_APPLICATION = 'HNKMSMEOTCAPP.wsgi.application'
 # }
 
 #DEVELOPMENT DATABASES 
-if DEBUG:
+if DEBUG :
     SITE_ID = 1
     DATABASES = { 
         'default': dj_database_url.config(

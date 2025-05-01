@@ -110,22 +110,22 @@
                                                         {% if progressing.is_complete_courses_Chapter_detail and progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 100%">
-                                                                    <p class="text-success mb-0">100% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 100%">
+                                                                   <p class="text-success mb-0 small"> <span class="px-2 bold">Progress :</span>100% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% elif progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 50%">
-                                                                    <p class="text-success mb-0">50% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 50%">
+                                                                    <p class="text-success mb-0 small"> <span class="px-2 bold">Progress :</span>50% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% elif not progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 0%">
-                                                                    <p class="text-success mb-0">0% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 0%">
+                                                                    <p class="text-success mb-0 small"><span class="px-2 bold">Progress :</span>0% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -137,22 +137,25 @@
                                             <!-- Completion Status -->
                                             {% with result=results|get_item:course %}
                                                 {% if result %}
-                                                    <small class="text-primary text-bold">Status:</small>
+                                                    <small class="text-dark text-bold">Status:</small>
                                                     <ul class="list-unstyled small">
                                                         <li class="text-success small"><strong>Successfully Completion</strong></li> 
                                                         <li class="text-success small"><strong>Completion Date:</strong> {{ result.updated_at }}</li>
                                                         <li class="text-success small"><strong>Result: {% if result.is_pass %}pass {% else %}re-take the test{% endif %}</strong></li> 
                                                         <li class="text-success small"><strong>Your score:</strong> {{ result.score|floatformat:0 }} %</li>
                                                     </ul>
+                                                    <hr class="text-primary">
+                                                    <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Retake</a>
                                                 {% else %}
                                                     <small>Status:
                                                         <span class="text-danger small">Incomplete</span>
                                                         <p class="small"><strong>Your Result:</strong> Not available</p>
                                                     </small>
+                                                    <hr class="text-primary">
+                                                    <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
                                                 {% endif %}
                                             {% endwith %}
-                                            <hr>
-                                            <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
+                                
                                         </div>
                                     </div>
                                 </div>
@@ -220,22 +223,22 @@
                                                         {% if progressing.is_complete_courses_Chapter_detail and progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 100%">
-                                                                    <p class="text-success mb-0">100% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 100%">
+                                                                    <p class="text-success mb-0"><span class="px-2 bold">Progress :</span> 100% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% elif progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 50%">
-                                                                    <p class="text-success mb-0">50% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 50%">
+                                                                    <p class="text-success mb-0"><span class="px-2 bold">Progress :</span>50% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% elif not progressing.is_complete_courses_Chapter_detail and not progressing.is_courses_Chapter_quiz_pass %}
                                                             
                                                             <div class="progress" role="progressbar" aria-label="User Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                                <div class="progress-bar text-bg-primary" style="width: 0%">
-                                                                    <p class="text-success mb-0">0% Completed</p>
+                                                                <div class="progress-bar bg-primary" style="width: 0%">
+                                                                    <p class="text-success mb-0"><span class="px-2 bold">Progress :</span> 0% Completed</p>
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -247,22 +250,24 @@
                                             <!-- Completion Status -->
                                             {% with result=results|get_item:course %}
                                                 {% if result %}
-                                                    <small class="text-primary text-bold">Status:</small>
+                                                    <small class="text-dark text-bold">Status:</small>
                                                     <ul class="list-unstyled small">
                                                         <li class="text-success small"><strong>Successfully Completion</strong></li> 
                                                         <li class="text-success small"><strong>Completion Date:</strong> {{ result.updated_at }}</li>
                                                         <li class="text-success small"><strong>Result: {% if result.is_pass %}pass {% else %}re-take the test{% endif %}</strong></li> 
                                                         <li class="text-success small"><strong>Your score:</strong> {{ result.score|floatformat:0 }} %</li>
                                                     </ul>
+                                                    <hr class="text-primary">
+                                                    <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Retake</a>
                                                 {% else %}
                                                     <small>Status:
                                                         <span class="text-danger small">Incomplete</span>
                                                         <p class="small"><strong>Your Result:</strong> Not available</p>
                                                     </small>
+                                                    <hr class="text-primary">
+                                                    <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
                                                 {% endif %}
-                                            {% endwith %}
-                                            <hr>
-                                            <a href="{% url 'marriage:course_detail' course.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Start</a>
+                                            {% endwith %}                                            
                                         </div>
                                     </div>
                                 </div>

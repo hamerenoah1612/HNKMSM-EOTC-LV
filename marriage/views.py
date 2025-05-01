@@ -132,12 +132,12 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
             context['is_quizzes_taken'] = Results.objects.filter(user=self.request.user, course=course).exists()
             # Filter quationsAndAnswer by the current course
             context['quationsAnswerData'] = marriageQuationsAndAnswer.objects.filter(course=course).order_by('created')
-            context['progress'] = UpdateCourseChapterDetailClicked(course,user=self.request.user, is_Chapter =True, is_quiz = False)
+            context['progress'] = UpdateCourseChapterDetailClicked(course,user=self.request.user, is_Chapter =True, is_quiz = False, score=0.0)
         else: 
             context['course_content'] = course
         return context
     
-def UpdateCourseChapterDetailClicked(course, user, is_Chapter , is_quiz ):
+def UpdateCourseChapterDetailClicked(course, user, is_Chapter , is_quiz, score):
     # Get or create the progress record for this user and course
     if is_Chapter == True:
         progress, created = CourseChapterProgressController.objects.get_or_create(
@@ -155,20 +155,24 @@ def UpdateCourseChapterDetailClicked(course, user, is_Chapter , is_quiz ):
             progress.save()
             
     if is_quiz :
+       
         progress, created = CourseChapterProgressController.objects.get_or_create(
             user=user,
             course=course,
             defaults={
                 'is_courses_Chapter_quiz_pass': True,
                 'slug': None  # The save() method will handle the slug
-            }
-        )
-        
-        # If the record already existed, update it
-        if not created:
-            progress.is_courses_Chapter_quiz_pass = True
-            progress.save()
+                }
+            )
             
+            # If the record already existed, update it
+        if not created:
+            if score >= 80.0:
+                progress.is_courses_Chapter_quiz_pass = True
+                progress.save()
+            else:
+                progress.is_courses_Chapter_quiz_pass = False
+                progress.save()    
     return progress
        
 class ResourceDetailView(LoginRequiredMixin, DetailView):
@@ -217,7 +221,7 @@ class MeetEventListView(ListView):
 
     def get_queryset(self):
         # Filter to show only active events
-        return MeetEvents.objects.filter(status='active').order_by('-date_and_time')
+        return MeetEvents.objects.filter(status_is_active = True).order_by('-date_and_time')
 
 class MeetEventDetailView(DetailView):
     model = MeetEvents
@@ -278,6 +282,9 @@ def submit_quiz(request, quiz_id):
         result.score = score
         result.save()
         if created:
-            UpdateCourseChapterDetailClicked(course,user=request.user, is_Chapter=False, is_quiz=True)
+            UpdateCourseChapterDetailClicked(course,user=request.user, is_Chapter=False, is_quiz=True, score=score)
+        else:
+            UpdateCourseChapterDetailClicked(course,user=request.user, is_Chapter=False, is_quiz=True, score=score)
+
         return redirect('marriage:course_detail', slug=course.slug)
     return render(request, 'marriage/course_detail.html', {'course_detail': course})

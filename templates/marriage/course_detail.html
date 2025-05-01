@@ -165,7 +165,7 @@
                 <!-- quations_answers -->
                 <div class="container mt-2">
                     <form class="mb-4 small" method="POST" action="{% url "marriage:quations_answers_create" %}" >
-                        <input type="hidden" name="csrfmiddlewaretoken" value="k4v0FWDC7GKGRVJbRQm3pec2YIymxbLMnJDjPo5JU127iPiCrTjts6EJoommdcSF">
+                        {% csrf_token %} 
                         <input type="hidden" name="course" id="id_course"  value="{{course_detail.id}}"> 
                         <div id="div_id_question" class="mb-3"> 
                             <label for="id_question" class="form-label requiredField">

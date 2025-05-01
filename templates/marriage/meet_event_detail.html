@@ -35,7 +35,7 @@
     <div class="container mt-5">
     {% if meet_event %}
          <!-- messages Meet Events -->
-        {% if messages %}
+        {% comment %} {% if messages %}
         <div class="border-primary p-2">
             <div class="alert alert-dismissible fade show" role="alert">
                 {% for message in messages %}
@@ -44,34 +44,63 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
         
         <h1 class="mb-2 fs-3">{{ meet_event.meet_type }} Details</h1>
         <hr>
         <div class="card border-primary shadow">
-            <div class="card-body mx-2">
+            <div class="card-body mx-1">
                 <div class="d-flex justify-content-between px-2">
-                    <h6 class="card-title fs-6">Held by: {{ meet_event.held_by }}</h6>
-                    <i class="fas fa-chess-king fa-2x text-primary"></i>
+                    <h6 class="card-title small">Held By: {{ meet_event.held_by }}</h6>
+                    <i class="fas fa-chess-king fa-1x text-primary"></i>
                 </div>
                 <hr>
-                <p class="card-text"><strong>Speaker:</strong> {{ meet_event.speaker }}</p>
-                {% if meet_event.special_guest %}
-                <p class="card-text"><strong>Special Guest:</strong> {{ meet_event.special_guest }}</p>
-                {% endif %}
-                <p class="card-text"><strong>Date and Time:</strong> {{ meet_event.date_and_time|date:"M d, Y H:i" }}</p>
-                {% if meet_event.location %}
-                <p class="card-text"><strong>Location:</strong> {{ meet_event.location }}</p>
-                {% endif %}
-                {% if meet_event.webinar_link %}
-                <p class="card-text"><strong>Webinar Link:</strong> <a href="{{ meet_event.webinar_link }}">{{ meet_event.webinar_link }}</a></p>
-                {% endif %}
-                {% if meet_event.webinar_password %}
-                <p class="card-text"><strong>Webinar Password:</strong> {{ meet_event.webinar_password }}</p>
-                {% endif %}
-                <hr>
-                <div class="d-grid gap-2 col-4 mx-auto">
+                <ul class="list-group text-secondary small">
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Speaker :</strong>
+                      <span>{{ meet_event.speaker }}</span>
+                    </li>
+                    
+                    {% if meet_event.special_guest %}
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Special Guest :</strong>
+                      <span>{{ meet_event.special_guest }}</span>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Date and Time :</strong>
+                      <span>{{ meet_event.date_and_time|date:"M d, Y H:i" }}</span>
+                    </li>
+                    
+                    {% if meet_event.location %}
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Location :</strong>
+                      <span>{{ meet_event.location }}</span>
+                    </li>
+                    {% endif %}
+                    
+                    {% if meet_event.webinar_link %}
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Webinar Link :</strong>
+                      <span><a href="{{ meet_event.webinar_link }}">Join Webinar</a></span>
+                    </li>
+                    {% endif %}
+                    
+                    {% if meet_event.webinar_password %}
+                    <li class="list-group-item d-flex justify-content-start align-items-center gap-2 small">
+                      <strong>Webinar Password :</strong>
+                      <span>{{ meet_event.webinar_password }}</span>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <div class="gap-2 mx-auto py-2">
+                    {% if meet_event.user.id == user.id %}
+                    <a href="" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">Hi {{user.username}}, you are already signed : click to cancel_the_event for meetEvent</a>
+                    {% else %}
                     <a href="{% url 'marriage:signup_for_event' meet_event.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">sign up for meetEvent</a>
+                    {% endif %}
                 </div>
                 
             </div>

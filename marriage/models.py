@@ -71,7 +71,7 @@ class Course(models.Model):
 
 # Course Progress Control for Users
 class CourseChapterProgressController(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_complete_courses_Chapter_detail = models.BooleanField(default=False)
     is_courses_Chapter_quiz_pass = models.BooleanField(default=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -85,7 +85,7 @@ class CourseChapterProgressController(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.user} - CourseChapterProgress'
+        return f'{self.user} - CourseChapterProgress {self.course.title}'
 
 
 # Subtitle Model
@@ -198,9 +198,19 @@ class MeetEvents(models.Model):
     held_by = models.CharField(max_length=100)
     speaker = models.CharField(max_length=100)
     special_guest = models.CharField(max_length=100, null=True, blank=True)
-    status = models.CharField(max_length=50, default="active")
+    status_is_active =  models.BooleanField(default=True)
     max_participant = models.IntegerField()
     min_participant = models.IntegerField()
+    is_cancelled = models.BooleanField(default=False)
+    cancelled_reason = models.CharField(max_length=100, null=True, blank=True)
+    cancelled_at = models.DateTimeField(null=True, blank=True)
+    cancelled_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cancelled_events'
+    )
     slug = models.SlugField(max_length=200, unique=True, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -212,9 +222,9 @@ class MeetEvents(models.Model):
         now = timezone.now()
         
         if self.end_time < now:
-            self.status = 'past'
+            self.status_is_active = False
         else:
-            self.status = 'active'
+            self.status_is_active = True
             
         super().save(*args, **kwargs)
 
