@@ -96,12 +96,13 @@
                 </ul>
                 
                 <div class="gap-2 mx-auto py-2">
-                    {% if meet_event.user.id == user.id %}
-                    <a 
+                    {% if user_meet_event.user.id == user.id %}
+                    <p></p>
+                    <a
                     href="{% url 'marriage:canceled_for_event' meet_event.slug %}" 
                     class="btn btn-sm btn-primary px-4 py-2 rounded-pill" 
                     onclick="return confirm('Are you sure you want to cancel your registration?');">
-                    Hi {{user.username}}, you are already signed : click to cancel_the_event for meetEvent
+                    Hi {{ user.username }}, you're registered. if want click to Cancel registration
                     </a>
                     {% else %}
                     <a href="{% url 'marriage:signup_for_event' meet_event.slug %}" class="btn btn-sm btn-primary px-4 py-2 rounded-pill">sign up for meetEvent</a>

@@ -227,11 +227,16 @@ class MeetEventDetailView(DetailView):
     model = MeetEvents
     template_name = 'marriage/meet_event_detail.html'  # Specify the template to use
     context_object_name = 'meet_event'
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_meet_event'] = SignupForMeetEvents.objects.filter(user=self.request.user).first()
+        return context
+    
+    
 @login_required
-def canceled_for_event(request, event_slug):
-    meet_event = get_object_or_404(MeetEvents, slug=event_slug)
-    print(meet_event)
+def canceled_for_event(request, slug):
+    meet_event = get_object_or_404(MeetEvents, slug=slug)
     try:
         # Get the signup record if it exists
         signup = SignupForMeetEvents.objects.filter(
@@ -258,7 +263,7 @@ def canceled_for_event(request, event_slug):
             f"Error cancelling registration: {str(e)}"
         )
     
-    return redirect('marriage:meet_event_detail', event_slug=event_slug)
+    return redirect('marriage:meet_event_detail', slug=slug)
 
 @login_required
 def signup_for_event(request, slug):

@@ -226,6 +226,10 @@ class MeetEvents(models.Model):
         else:
             self.status_is_active = True
             
+        if self.is_cancelled and not self.cancelled_at:
+            self.cancelled_at = now 
+        else:
+            self.cancelled_at = None      
         super().save(*args, **kwargs)
 
     def __str__(self):
