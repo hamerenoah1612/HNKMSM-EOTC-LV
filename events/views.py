@@ -1,49 +1,81 @@
 # events/views.py
-from pyexpat.errors import messages
+# from pyexpat.errors import messages
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView, CreateView
-from .models import Event, EventGallery, PostEventImages,NewsAndAnnouncements,RemindMeUpcomingEvent
+from django.urls import reverse, reverse_lazy
+from django.views.generic import DetailView, CreateView,UpdateView
+from django.views import View
+from .models import (
+    Event, EventGallery, 
+    PostEventImages,NewsAndAnnouncements,
+    RemindMeUpcomingEvent,MarkedAsReadRemindMeNotification )# Import your new model
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.db import transaction
+from django.db.models import Exists, OuterRef, Q
+from django.views.generic.list import ListView
 
 class EventListView(ListView):
     model = Event
     template_name = 'events/event_list.html'
-    context_object_name = 'events'
-    paginate_by = 10  # Optional: Add pagination
-    
+    context_object_name = 'past_events'
+    paginate_by = 10
+
     def get_queryset(self):
         now = timezone.now()
-        queryset = super().get_queryset()
         
-        for event in queryset:
-            if event.end_time < now and event.status_tag != 'past':
-                event.status_tag = 'past'
-                event.save()
-            elif event.end_time >= now and event.status_tag != 'active':
-                event.status_tag = 'active'
-                event.save()
-        
-        for event in queryset:
-            if event.end_time < now and event.status_tag == 'past':
-               
-                # Check if an EventGallery entry with the same post_events and held_date already exists
-                if not EventGallery.objects.filter(post_events=event, held_date=event.end_time.date()).exists():
-                    # Create a new EventGallery object
-                    EventGallery.objects.create(
+        # Use a transaction to ensure data consistency
+        with transaction.atomic():
+            # Update statuses using bulk operations
+            past_events = Event.objects.filter(
+                Q(end_time__lt=now) & ~Q(status_tag='past')
+            )
+            past_events.update(status_tag='past')
+            
+            Event.objects.filter(
+                Q(end_time__gte=now) & ~Q(status_tag='active')
+            ).update(status_tag='active')
+            
+            # Create missing galleries in bulk only for events we just updated to past
+            if past_events.exists():
+                # Get IDs of events we just updated
+                updated_event_ids = past_events.values_list('id', flat=True)
+                
+                # Find which of these need galleries
+                events_needing_gallery = Event.objects.filter(
+                    id__in=updated_event_ids
+                ).annotate(
+                    has_gallery=Exists(
+                        EventGallery.objects.filter(
+                            post_events=OuterRef('pk'),
+                            held_date=OuterRef('end_time__date')
+                        )
+                    )
+                ).filter(has_gallery=False)
+                
+                galleries = [
+                    EventGallery(
                         post_events=event,
                         number_of_participants=event.max_number_guests,
-                        held_date=event.end_time,  # Ensure held_date is a date object
+                        held_date=event.end_time.date(),
                         category=event.category,
-                        thumbnail_title=event.title  # Assuming you want to use the event title as the thumbnail title
-                    )
+                        thumbnail_title=event.title
+                    ) for event in events_needing_gallery
+                ]
                 
-        return queryset
+                if galleries:
+                    EventGallery.objects.bulk_create(galleries)
+        
+        # Return only past events for the main list
+        return Event.objects.filter(status_tag='past').order_by('-end_time')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_events"] = Event.objects.filter(status_tag='active')
+        context["active_events"] = Event.objects.filter(
+            status_tag='active'
+        ).order_by('start_time')
         return context
+
 
 class EventDetailView(DetailView):
     model = Event
@@ -106,7 +138,7 @@ class UserNotificationListView(LoginRequiredMixin, ListView):
     context_object_name = 'remind_me_note'
     
     def get_queryset(self):
-        return RemindMeUpcomingEvent.objects.filter(your_name=self.request.user, is_passed = False)
+        return RemindMeUpcomingEvent.objects.filter(your_name=self.request.user, is_passed = False, is_viewed=False)
     
 class AddRemindMeNotificationCreateView(LoginRequiredMixin, CreateView):
    
@@ -119,7 +151,34 @@ class AddRemindMeNotificationCreateView(LoginRequiredMixin, CreateView):
             event=upcoming_event,
             your_name=request.user,
         )
+        
+        # Redirect to the event list view after processing
+        return redirect('events:event_list')
+    
+class MarkedAsReadRemindMeNotificationView(LoginRequiredMixin, View):
+    """
+    Creates or updates a record in MarkedAsReadRemindMeNotification
+    to indicate that the current user has viewed a specific RemindMeUpcomingEvent.
+    """
+    def post(self, request, slug):
+        # Fetch the upcoming event
+        upcoming_event = get_object_or_404(RemindMeUpcomingEvent, slug=slug)
+
+        # Create or update the 'read' status for the current user and event
+        # If a record exists, it does nothing as is_read is always True
+        # If it doesn't exist, it creates a new record.
+        marked_as_read_entry, created = MarkedAsReadRemindMeNotification.objects.update_or_create(
+            user=request.user,
+            event=upcoming_event,
+            defaults={'is_read': True} # This ensures it's always True if created/updated
+        )
+
+        # Optional: Add a success message
+        if created:
+            messages.success(request, f"Notification for '{upcoming_event.event_name}' marked as read.")
+        else:
+            messages.info(request, f"Notification for '{upcoming_event.event_name}' was already marked as read.")
+
 
         # Redirect to the event list view after processing
         return redirect('events:event_list')
-        

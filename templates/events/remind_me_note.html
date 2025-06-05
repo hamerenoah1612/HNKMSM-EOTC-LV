@@ -37,7 +37,18 @@
                 <hr>
                 <p class="card-text small">{{ remind_me.massage|truncatewords:30 }}</p>
                 <hr>
-                <a href="{% url 'events:event_detail' remind_me.event.slug %}" class="btn btn-sm btn-outline-primary rounded-pill "><small>Details</small></a>
+                <div class="d-flex justify-content-start gap-2">
+                    <div>
+                        <form action="{% url 'events:mark_as_read' slug=remind_me.slug %}" method="post">
+                            {% csrf_token %} {# Important for security in Django! #}
+                            <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill "><small>MarkAsRead</small></button>
+                        </form>
+                    </div>
+                    <div>
+                        {% comment %} <a href="{% url 'events:mark_as_read' remind_me.slug %}" class="btn btn-sm btn-outline-primary rounded-pill "><small>MarkAsRead</small></a> {% endcomment %}
+                        <a href="{% url 'events:event_detail' remind_me.event.slug %}" class="btn btn-sm btn-outline-primary rounded-pill "><small>Details</small></a>
+                    </div>
+                </div>
             </div>
           </div>
         </div>

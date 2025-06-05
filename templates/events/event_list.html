@@ -23,9 +23,118 @@
             <p class="h2 fs-6 text-primary small">In the name of God, our church is inviting all of you Orthodox people to participate in the upcoming programs!!</p>
         </div>
     </div>
-    <div class="container my-4">
+    <!-- templates/events/event_list.html -->
+<!-- Upcoming Events Section -->
+<div class="container my-4">
+    <h2 class="mb-4 fs-4">Upcoming events</h2>
+    <hr>
+    {% if active_events %}
+    <div class="row pt-3">
+        {% for event in active_events %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title fs-5">{{ event.title }}</h2>
+                    <hr>
+                    <h2 class="card-title fs-5">{{ event.start_time }}</h2>
+                    <hr>
+                    <p class="card-text small">{{ event.description|truncatewords:30 }}</p>
+                    <hr>
+                    <a href="{% url 'events:event_detail' event.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="col-md-6 mb-2 mx-auto">
+        <div class="card shadow">
+            <img src="{% static 'img/noUpComingEvents.png' %}" class="card-img-top" alt="noUpComingEvents">
+            <div class="card-body">
+                <p class="small">እናዝናለን! ለጊዜው፣ ምንም የተዘረዘሩ መጪ ክስተቶች የሉም። እባክዎ ቆየት ብለው ይሞክሩ።</p>
+                <hr>
+                <p class="small">We apologize! Currently, there are no upcoming events listed. Please check back later.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Past Events Section -->
+<div class="container mt-5">
+    <h2 class="mb-4 pt-5 fs-4">Past events list | <span class="small fs-6 text-primary">ያለፉ ክስተቶች ዝርዝር</span></h2>
+    <hr>
+    {% if past_events %}
+    <div class="row pt-3">
+        {% for event in past_events %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title fs-5">{{ event.title }}</h2>
+                    <hr>
+                    <h2 class="card-title fs-5">{{ event.start_time}}</h2>
+                    <hr>
+                    <p class="card-text small">{{ event.description|truncatewords:30 }}</p>
+                    <hr>
+                    <a href="{% url 'events:event_detail' event.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center">
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+    {% comment %} <div class="container my-4">
         <h2 class="mb-4 fs-4">Upcoming  events</h2>
         <hr>
+        {% if active_events %}
+    <div class="row pt-3">
+        {% for event in active_events %}
+        <div class="col-md-4 mb-4">
+            <!-- ... event card ... -->
+            {{event.description}}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="col-md-6 mb-2">
+        <p>no events message </p>
+        <!-- ... no events message ... -->
+    </div>
+    {% endif %}
+        {% if active_events %}
         <div class="row pt-3">
             {% if active_events %}
                 {% for event in active_events %}
@@ -84,11 +193,14 @@
                 </ul>
             {% endif %}
         </div>
+        {% endif %} 
     </div>
     <div class="container mt-5">
         <h2 class="mb-4 pt-5 fs-4 ">Past events list | <span class="small fs-6 text-primary">ያለፉ ክስተቶች ዝርዝር</span></h2>
         <hr>
+        {% if events %}
         <div class="row pt-3">
+            
             {% for event in events %}
                 {% if event.status_tag == 'past' %}
                     <div class="col-md-4 mb-4">
@@ -109,7 +221,8 @@
                     </div>
                 {% endif %}
             {% endfor %}
-        </div>
+
+        </div> 
         <div class="d-flex justify-content-center">
             {% if is_paginated %}
                 <ul class="pagination">
@@ -134,7 +247,8 @@
                     {% endif %}
                 </ul>
             {% endif %}
-        </div>
-    </div>
+        </div> 
+        {% endif %}
+    </div> {% endcomment %}
 </div>
 {% endblock %}

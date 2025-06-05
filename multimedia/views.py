@@ -129,11 +129,10 @@ class TestimonyOfSalvationDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         testimony = self.get_object()
-
-        # Example: finding related testimonies based on some criteria
-        related_testimonies = TestimonyOfSalvation.objects.exclude(id=testimony.id)[:4]  # Excluding the current testimony and limiting to 4
-
-        context['related_testimonies'] = related_testimonies
+        if testimony :
+            # Example: finding related testimonies based on some criteria
+            related_testimonies = TestimonyOfSalvation.objects.exclude(id=testimony.id)[:4]  # Excluding the current testimony and limiting to 4
+            context['related_testimonies'] = related_testimonies
         return context
 
 class ArchiveLinkListView(ListView):

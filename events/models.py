@@ -121,6 +121,7 @@ class RemindMeUpcomingEvent(models.Model):
     your_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='remainder')
     massage = models.TextField(default="Upcoming Event Tomorrow:This is a polite reminder that the scheduled event will take place tomorrow. Please ensure you are prepared & ready to participate.")
     is_passed = models.BooleanField(default=False)
+    is_viewed = models.BooleanField(default=False, blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -138,3 +139,19 @@ class RemindMeUpcomingEvent(models.Model):
     
     def __str__(self):
         return f"Remainder:{self.event.title} coming tomorrow start_time {self.event.start_time}"
+    
+    
+class MarkedAsReadRemindMeNotification(models.Model):
+        """
+        Tracks when a specific user has marked a RemindMeUpcomingEvent as read.
+        """
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='read_reminders')
+        event = models.ForeignKey(RemindMeUpcomingEvent, on_delete=models.CASCADE, related_name='read_by_users')
+        timestamp = models.DateTimeField(auto_now_add=True)
+        is_read = models.BooleanField(default=True) # Always True when created via this view
+
+        class Meta:
+            unique_together = ('user', 'event') # A user can only mark an event as read once
+
+        def __str__(self):
+            return f"{self.user.username} read {self.event.event}"

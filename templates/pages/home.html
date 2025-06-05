@@ -16,13 +16,13 @@
                             <h6 data-aos="fade-left" class="mb-4 animated bounceInDown  text-light">HAMERE NOAH KIDANE MIHRET, ST MICHAEL & ABUNE TEKLEHIMANOT ETHIOPIAN ORTHODOX TEWAHEDO CATHEDRAL IN LAS VEGAS</h6>
                         </div>
 
-                        <div class="">
+                        {% comment %} <div class="">
                             {% if user.is_authenticated %}
-                            <a href="{% url "events:event_list" %}" class="btn btn-sm btn-primary border-0 rounded-pill py-2 px-2 px-md-5 me-4 animated bounceInLeft">Go to events</a>
+                            <a href="{% url 'events:event_list' %}" class="btn btn-sm btn-primary border-0 rounded-pill py-2 px-2 px-md-5 me-4 animated bounceInLeft">Go to events</a>
                             {% else %}
                             <a href="{% url 'account_login'%}" class="btn btn-sm btn-primary border-0 rounded-pill py-2 px-2 px-md-5 me-4 animated bounceInLeft">Go to events</a>
                             {% endif %}
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                     <div class="col-lg-5 pt-5 aos-init aos-animate" data-aos="fade-left">
                         <a href="" class="video-bg" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal-1">

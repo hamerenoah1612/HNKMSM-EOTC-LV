@@ -22,8 +22,6 @@ class RelativeForm(forms.ModelForm):
             'relationship': forms.TextInput(attrs={'class': 'form-control form-control-sm'}),
         }
   
-    
-
 class MembersUpdateInformationForm(forms.ModelForm):
     
     marital_status = forms.ChoiceField(

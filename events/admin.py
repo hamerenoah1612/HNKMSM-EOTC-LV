@@ -1,8 +1,10 @@
 # events/admin.py
 from django.contrib import admin
-from .models import Event, EventGallery, EventsCategory, PostEventImages,NewsAndAnnouncements,RemindMeUpcomingEvent
+from .models import Event, EventGallery, EventsCategory, PostEventImages,NewsAndAnnouncements,RemindMeUpcomingEvent,MarkedAsReadRemindMeNotification
 
 admin.site.register(NewsAndAnnouncements)
+
+admin.site.register(MarkedAsReadRemindMeNotification)
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
@@ -67,4 +69,4 @@ class PostEventImagesAdmin(admin.ModelAdmin):
     
 @admin.register(RemindMeUpcomingEvent)
 class RemindMeUpcomingEventAdmin(admin.ModelAdmin):
-    list_display = ('event', 'your_name', 'is_passed')
+    list_display = ('event', 'your_name', 'is_passed', 'is_viewed')

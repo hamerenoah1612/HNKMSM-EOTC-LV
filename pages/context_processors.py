@@ -15,7 +15,7 @@ def cart_and_notifications(request):
             else 0
         )
         notification_count = RemindMeUpcomingEvent.objects.filter(
-            your_name=request.user, is_passed=False
+            your_name=request.user, is_passed=False,is_viewed=False
         ).count()
     
     return {

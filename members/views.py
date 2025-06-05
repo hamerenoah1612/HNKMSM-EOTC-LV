@@ -73,7 +73,6 @@ class RelativeCreateView(LoginRequiredMixin, CreateView):
         form.instance.member = MembersUpdateInformation.objects.get(user=self.request.user)
         return super().form_valid(form)
 
-
 class MemberUpdateView(LoginRequiredMixin, UpdateView):
     model = MembersUpdateInformation
     form_class = MembersUpdateInformationForm
