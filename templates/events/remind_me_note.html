@@ -39,7 +39,7 @@
                 <hr>
                 <div class="d-flex justify-content-start gap-2">
                     <div>
-                        <form action="{% url 'events:mark_as_read' slug=remind_me.slug %}" method="post">
+                        <form action="{% url 'events:mark_as_read' remind_me.slug %}" method="post">
                             {% csrf_token %} {# Important for security in Django! #}
                             <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill "><small>MarkAsRead</small></button>
                         </form>

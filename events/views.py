@@ -163,7 +163,7 @@ class MarkedAsReadRemindMeNotificationView(LoginRequiredMixin, View):
     def post(self, request, slug):
         # Fetch the upcoming event
         upcoming_event = get_object_or_404(RemindMeUpcomingEvent, slug=slug)
-
+        
         # Create or update the 'read' status for the current user and event
         # If a record exists, it does nothing as is_read is always True
         # If it doesn't exist, it creates a new record.
@@ -172,13 +172,6 @@ class MarkedAsReadRemindMeNotificationView(LoginRequiredMixin, View):
             event=upcoming_event,
             defaults={'is_read': True} # This ensures it's always True if created/updated
         )
-
-        # Optional: Add a success message
-        if created:
-            messages.success(request, f"Notification for '{upcoming_event.event_name}' marked as read.")
-        else:
-            messages.info(request, f"Notification for '{upcoming_event.event_name}' was already marked as read.")
-
-
+        
         # Redirect to the event list view after processing
         return redirect('events:event_list')

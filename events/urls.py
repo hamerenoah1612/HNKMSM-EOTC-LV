@@ -21,5 +21,5 @@ urlpatterns = [
     path('NewsAndAnnouncements/<slug:slug>/', NewsAndAnnouncementsDetailView.as_view(), name='NewsAndAnnouncements_detail'),
     path('user/userNotification/', UserNotificationListView.as_view(), name='user-notification'),
     path('user/<slug:slug>/add-to-remind-me/', AddRemindMeNotificationCreateView.as_view(), name='add_remind_me'),
-    path('user/<slug:slug>/event_mark-as-read/', MarkedAsReadRemindMeNotificationView.as_view(), name='mark_as_read'),
+    path('event_mark-as-read/<slug:slug>/', MarkedAsReadRemindMeNotificationView.as_view(), name='mark_as_read'),
 ]
