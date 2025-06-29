@@ -29,6 +29,7 @@ from .models import (
     Order, 
     ShippingInformation, 
     OrderCase,
+    userOrderHistory,
     )
 
 class PaymentMenuView(ListView):
@@ -244,8 +245,8 @@ class PaymentsCaseHistoryListView(LoginRequiredMixin, ListView):
 class PaymentCancelView(TemplateView):
     template_name = "payments/cancel.html"
     
-class PaymentSuccessView(TemplateView):
-    template_name = "payments/success.html"
+# class PaymentSuccessView(TemplateView):
+#     template_name = "payments/success.html"
    
 # Set your secret key. Remember to switch to your live secret key in production.
 # This is your Stripe CLI webhook secret for testing your endpoint locally.
@@ -530,7 +531,11 @@ def handle_checkout_session(session):
                             order_case.delivery_state = "pending"
                             order_case.save()
                             logger.info(f"OrderCase {order_case.id} updated with new ShippingInformation.")
-
+                    # Create a new order
+                    paymentConfirmation = userOrderHistory.objects.create(
+                        user=order.user,
+                        cart=cart_items.cart,
+                    )    
                     # Clear cart items after successfully updating OrderCases
                     cart_items = CartPaymentCases.objects.filter(user=order.user)
                     if cart_items.exists():
@@ -546,7 +551,7 @@ def handle_checkout_session(session):
                                 member.member_status = 'active'
                                 member.save()
                                 logger.info(f"Membership {member.member_id} updated to active.")
-
+                        
                         cart_items.delete()
                         cart_payments.delete()
                         logger.info(f"Cart items and related cart payments cleared for user {order.user.id}.")
@@ -559,3 +564,23 @@ def handle_checkout_session(session):
                 logger.error(f"Error processing order {order.id}: {str(e)}")       
 
 
+class PaymentSuccessView(LoginRequiredMixin, TemplateView):
+    """
+    Renders the payment success page and provides order confirmation details.
+    """
+    template_name = "payments/success.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Adds the user's latest confirmed order to the context for the template.
+        """
+        context = super().get_context_data(**kwargs)
+        
+        # Option 1: Get the latest confirmed order
+        user_order_history = userOrderHistory.objects.filter(
+            user=self.request.user,
+            status='confirmed'
+        ).order_by('-created').first() # Get the most recent one
+
+        context['order_history'] = user_order_history
+        return context

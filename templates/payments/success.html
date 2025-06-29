@@ -26,15 +26,38 @@
         </div>
     </div>
 </div>
-<div class="container-fade mt-1 text-center">
-    <div class="alert alert-success text-success rounded-4 shadow" role="alert">
-      <p>Your payment has been successfully processed. Thank you for your payment!</p>
+{% comment %} <div class="container-fade mt-1 text-center">
+    <div class="alert alert-success text-success rounded-2 shadow" role="alert">
+    <i class="bi bi-check-circle-fill" style="font-size: 4rem; "></i>
+      <p>Your payment has been successfully processed.</p> 
+      <p>Thank you for your payment!</p>
       <p><small>Confirmation Id : H468454542121</small></p>
       <small>Date : 07/15/2025 02:32</small>
     </div>
     <a href="{% url 'payments:payment_case_list' %}" class="btn btn-sm px-4 py-2 rounded-pill btn-primary">Back to Payment Cases</a>
     <a href="{% url 'pages:user-dashboard' %}" class="btn btn-sm px-4 py-2 rounded-pill btn-primary">Your dashboard</a>
-</div>
+</div>  {% endcomment %}
+<div class="container-fade mt-1 text-center">
+    <div class="alert alert-success text-success rounded-2 shadow" role="alert">
+        
+        {% if order_history %}
+        <i class="bi bi-check-circle-fill" style="font-size: 3rem; "></i>
+        <h1>Thank You!</h1>
+        <p>Your payment was successful and your order has been confirmed.</p>
+        <h2>Order Confirmation Details</h2>
+        <p><strong>Confirmation Number:</strong> {{ order_history.order_confirmation_number }}</p>
+        <p><strong>Order Status:</strong> {{ order_history.status }}</p>
+        <p><strong>Order placed on:</strong> {{ order_history.created|date:"F j, Y, P" }}</p>
+        
+        {# You can access more related data from the order object #}
+        <p><strong>Total Amount:</strong> {{ order_history.order.total_amount }}</p>
 
+        {% else %}
+            <p>We couldn't find your order details. Please contact support if you have any questions.</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'payments:payment_case_list' %}" class="btn btn-sm px-4 py-2 rounded-pill btn-primary">Back to Payment Cases</a>
+    <a href="{% url 'pages:user-dashboard' %}" class="btn btn-sm px-4 py-2 rounded-pill btn-primary">Your dashboard</a>
+</div>
 </div>
 {% endblock %}

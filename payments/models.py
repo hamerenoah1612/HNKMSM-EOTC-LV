@@ -110,6 +110,7 @@ class CartPaymentCases(models.Model):
 
     def __str__(self):
         return f"cart_items {self.quantity} x {self.payment_case.title}"
+ 
     
 class ShippingInformation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -130,7 +131,6 @@ class ShippingInformation(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.address}"
-
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -153,7 +153,6 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.order_id} - {self.user.username}"
-
 
 class OrderCase(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_cases')
@@ -188,7 +187,31 @@ class OrderCase(models.Model):
         if not self.slug:
             value = f"OrderCase-{self.order.user.id}-{self.order.order_id}"
             self.slug = unique_slug(value, type(self))
+            
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.quantity} x {self.payment_case} in Order {self.order.order_id}"
+
+
+class userOrderHistory(models.Model):
+    STATUS = (
+        ('confirmed', 'confirmed'),
+        ('canceled', 'canceled'),
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order_user')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_conf')
+    order_confirmation_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    status = models.CharField(max_length=50, default='confirmed', choices=STATUS)
+    slug = models.SlugField(unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+                value = f"userOrderHistory-{self.user}"
+                self.slug = unique_slug(value, type(self))    
+        super(userOrderHistory, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Order confirmation_number of-{self.user}-{self.order_confirmation_number }--status-{self.status}"
