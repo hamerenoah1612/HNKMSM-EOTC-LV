@@ -531,10 +531,14 @@ def handle_checkout_session(session):
                             order_case.delivery_state = "pending"
                             order_case.save()
                             logger.info(f"OrderCase {order_case.id} updated with new ShippingInformation.")
+                    
                     # Create a new order
                     paymentConfirmation = userOrderHistory.objects.create(
                         user=order.user,
-                        cart=cart_items.cart,
+                        order=order,  
+                        # <--- This is the corrected line
+                        # You might also want to explicitly set the status, though it defaults to 'confirmed'
+                        # status='confirmed',
                     )    
                     # Clear cart items after successfully updating OrderCases
                     cart_items = CartPaymentCases.objects.filter(user=order.user)

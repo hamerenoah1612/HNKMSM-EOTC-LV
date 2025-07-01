@@ -193,7 +193,6 @@ class OrderCase(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.payment_case} in Order {self.order.order_id}"
 
-
 class userOrderHistory(models.Model):
     STATUS = (
         ('confirmed', 'confirmed'),
